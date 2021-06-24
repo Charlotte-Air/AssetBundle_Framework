@@ -1,2 +1,4 @@
-# XLua_Framework_Project
-# Build your own Xlua framework project from zero~
+# :smiley_cat: Build your own Xlua framework project from zero~
+⭐️  ~
+⭐️ ~
+⭐️~
