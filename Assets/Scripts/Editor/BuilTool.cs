@@ -70,4 +70,5 @@ public class BuilTool : Editor
         dependenceList = files.Where(file => !file.EndsWith(".cs") && !file.Equals(curFile)).ToList();  //排除代码文件与自身
         return dependenceList;
     }
+
 }

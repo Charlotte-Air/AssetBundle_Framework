@@ -9,7 +9,20 @@ public class PathUtil
     ///<summary> Build输出目录 </summary>
     public static readonly string BuildeOutPath = Application.streamingAssetsPath;
     ///<summary> Build资源路径 </summary>
-    public static string BundleResourcePath {  get { return Application.streamingAssetsPath;  } }
+    public static string BundleResourcePath
+    {
+        get
+        {
+            if (AppConst.gameMode == GameMode.UpdateMode)
+                return ReadWritePath;
+            return ReadPath;
+        }
+    }
+
+    /// <summary>只读目录</summary>
+    public static readonly string ReadPath = Application.streamingAssetsPath;
+    /// <summary>可读写目录</summary>
+    public static readonly string ReadWritePath = Application.persistentDataPath;
 
     /// <summary>
     /// 获取Unity相对路径
