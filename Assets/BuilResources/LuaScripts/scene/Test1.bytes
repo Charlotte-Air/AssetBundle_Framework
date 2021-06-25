@@ -1,0 +1,25 @@
+function OnInit()
+    print("Lua->Test1->OnInit")
+end
+
+function Update()
+    
+end
+    
+function OnActive()
+    print("Lua->Test1->OnActive")
+end
+
+function OnInActive()
+    print("Lua->Test1->OnInActive")
+end
+
+function OnEnter()
+    print("Lua->Test1->OnEnter")
+    Manager.Scene:LoadScene("Test2","scene.Test2")
+    Manager.Scene:SetActive(self.SceneName)
+end
+
+function OnQuit()
+    print("Lua->Test1->OnQuit")
+end

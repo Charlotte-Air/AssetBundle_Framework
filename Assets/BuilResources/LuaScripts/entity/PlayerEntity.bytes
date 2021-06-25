@@ -1,0 +1,16 @@
+function OnInit()
+    print("Lua->PlayerEntity->OnInit")
+end
+
+function OnShow()
+    print("Lua->PlayerEntity->OnShow")
+    self.gameObject.transform.localPosition = Vector3(0,2,0)
+end
+
+function Update()
+
+end
+
+function OnHide()
+    print("Lua->PlayerEntity->OnHide")
+end

@@ -66,43 +66,66 @@ public class PathUtil
 
 
     #region 获取资源接口
-    ///<summary> 获取Lua路径 </summary>
+
+    ///<summary>
+    /// 获取Lua路径
+    /// </summary>
     public static string GetLuaPath(string name)
     {
         return string.Format("Assets/BuilResources/LuaScripts/{0}.bytes", name);
     }
 
-    ///<summary> 获取UI路径 </summary>
+    ///<summary>
+    /// 获取UI路径
+    /// </summary>
     public static string GetUIPath(string name)
     {
         return string.Format("Assets/BuilResources/UI/prefabs/{0}.prefab", name);
     }
 
-    ///<summary> 获取场景路径 </summary>
+    ///<summary>
+    /// 获取场景路径
+    /// </summary>
     public static string GetScenePath(string name)
     {
         return string.Format("Assets/BuilResources/Scenes/{0}.unity", name);
     }
 
-    ///<summary> 获取特效路径 </summary>
+    ///<summary>
+    /// 获取特效路径
+    /// </summary>
     public static string GetEffectPath(string name)
     {
         return string.Format("Assets/BuilResources/Effect/prefabs/{0}.prefab}", name);
     }
 
-    ///<summary> 获取音效路径 </summary>
+    ///<summary>
+    /// 获取模型路径
+    /// </summary>
+    public static string GetModelPath(string name)
+    {
+        return string.Format("Assets/BuilResources/Model/prefabs/{0}.prefab", name);
+    }
+
+    ///<summary>
+    /// 获取音效路径
+    /// </summary>
     public static string GetMusicPath(string name)
     {
         return string.Format("Assets/BuilResources/Audio/Music/{0}", name);
     }
 
-    ///<summary> 获取音乐路径 </summary>
+    ///<summary>
+    /// 获取音乐路径
+    /// </summary>
     public static string GetSoundPath(string name)
     {
         return string.Format("Assets/BuilResources/Audio/Sound/{0}", name);
     }
 
-    ///<summary> 获取贴图路径 </summary>
+    ///<summary>
+    /// 获取贴图路径
+    /// </summary>
     public static string GetSpritePath(string name)
     {
         return string.Format("Assets/BuilResources/Sprite/{0}", name);

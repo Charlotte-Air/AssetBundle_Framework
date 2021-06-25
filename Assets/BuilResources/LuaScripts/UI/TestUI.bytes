@@ -1,15 +1,16 @@
 function OnInit()
-    print("Lua->OnInit")
+    print("Lua->UI->OnInit")
 end
 
 function OnOpen()
-    print("Lua->OnOpen")
+    print("Lua->UI->OnOpen")
+    Manager.Scene:LoadScene("Test1","scene.Test1")
 end
 
 function Update()
-    print("Lua->Update")
+    
 end
 
 function OnClose()
-    print("Lua->OnClose")
+    print("Lua->UI->OnClose")
 end

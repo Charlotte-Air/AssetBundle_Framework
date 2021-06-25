@@ -1,0 +1,18 @@
+Path = CS.PathUtil
+
+function OnInit()
+    print("Lua->Test2->OnInit")
+end
+
+function OnActive()
+    print("Lua->Test2->OnActive")
+end
+ 
+function OnEnter()
+    print("Lua->Test2->OnEnter")
+    Manager.Entity:ShowEntity(Path.GetModelPath("Player"),"Player","entity.PlayerEntity");
+end
+
+function OnQuit()
+    print("Lua->Test2->OnQuit")
+end

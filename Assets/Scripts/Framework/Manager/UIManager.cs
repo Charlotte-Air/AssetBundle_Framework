@@ -7,11 +7,11 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 缓存UI集合
     /// </summary>
-    private Dictionary<string, GameObject> m_UI = new Dictionary<string, GameObject>();
+    private Dictionary<string, GameObject> UIs = new Dictionary<string, GameObject>();
     /// <summary>
     /// UI分组集合
     /// </summary>
-    private Dictionary<string, Transform> m_UIGroups = new Dictionary<string, Transform>();
+    private Dictionary<string, Transform> UIGroups = new Dictionary<string, Transform>();
     private Transform ui_Transform;
 
     void Awake()
@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour
         {
             GameObject go = new GameObject("Group-" + group[i]);
             go.transform.SetParent(ui_Transform, false);
-            m_UIGroups.Add(group[i], go.transform);
+            UIGroups.Add(group[i], go.transform);
         }
     }
 
@@ -40,9 +40,9 @@ public class UIManager : MonoBehaviour
     /// <returns></returns>
     Transform GetGroup(string group)
     {
-        if (!m_UIGroups.ContainsKey(group))
+        if (!UIGroups.ContainsKey(group))
             Debug.LogError("Group is Not Exist");
-        return m_UIGroups[group];
+        return UIGroups[group];
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ public class UIManager : MonoBehaviour
     public void ShowUI(string uiName,string group,string luaName)
     {
         GameObject ui = null;
-        if (m_UI.TryGetValue(uiName, out ui)) //查找集合是否已经加载过
+        if (UIs.TryGetValue(uiName, out ui)) //查找集合是否已经加载过
         {
             UILogic uiLogic = ui.GetComponent<UILogic>();
             uiLogic.OnOpen();
@@ -64,7 +64,7 @@ public class UIManager : MonoBehaviour
         Manager.Resourece.LoadUI(uiName, (UnityEngine.Object obj) =>
         {
             ui =Instantiate(obj) as GameObject;
-            m_UI.Add(uiName,ui);
+            UIs.Add(uiName,ui);
             Transform parent = GetGroup(group);
             ui.transform.SetParent(parent, false);
             UILogic uiLogic = ui.AddComponent<UILogic>();

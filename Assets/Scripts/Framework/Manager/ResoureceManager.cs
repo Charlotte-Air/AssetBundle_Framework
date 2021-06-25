@@ -11,7 +11,7 @@ public class ResoureceManager : MonoBehaviour
     /// <summary>
     /// Bundle信息集合
     /// </summary>
-    private Dictionary<string, BundleInfo> m_BundleInfos = new Dictionary<string, BundleInfo>();
+    private Dictionary<string, BundleInfo> BundleInfos = new Dictionary<string, BundleInfo>();
     internal class BundleInfo
     {
         public string AssetsName;
@@ -37,7 +37,7 @@ public class ResoureceManager : MonoBehaviour
             {
                 bundeInfo.Dependences.Add(info[j]);
             }
-            m_BundleInfos.Add(bundeInfo.AssetsName,bundeInfo);
+            BundleInfos.Add(bundeInfo.AssetsName,bundeInfo);
 
             if (info[0].IndexOf("LuaScripts") > 0) //查找Lua文件夹
             {
@@ -53,9 +53,9 @@ public class ResoureceManager : MonoBehaviour
     /// <param name="action">完成回调</param>
     IEnumerator LoadBundleAsync(string assetsName,Action<UObject> action = null)
     {
-        string bundleName = m_BundleInfos[assetsName].BundleName;
+        string bundleName = BundleInfos[assetsName].BundleName;
         string bundlePath = Path.Combine(PathUtil.BundleResourcePath, bundleName);
-        List<string> dependences = m_BundleInfos[assetsName].Dependences;
+        List<string> dependences = BundleInfos[assetsName].Dependences;
         if (dependences != null && dependences.Count > 0)
         {
             for (int i = 0; i < dependences.Count; i++)
@@ -155,6 +155,14 @@ public class ResoureceManager : MonoBehaviour
     /// <param name="assetsName"></param>
     /// <param name="action"></param>
     public void LoadLua(string assetsName, Action<UnityEngine.Object> action = null)
+    {
+        LoadAssest(assetsName, action);
+    }
+
+    /// <summary>
+    /// 加载模型
+    /// </summary>
+    public void LoadPrefab(string assetsName, Action<UnityEngine.Object> action = null)
     {
         LoadAssest(assetsName, action);
     }

@@ -7,12 +7,14 @@ using UnityEngine.Networking;
 
 public class HotUpdate : MonoBehaviour
 {
-    private byte[] m_ReadPathFildListData;
-    private byte[] m_ServerFileListData;
+    private byte[] ReadPathFildListData;
+    private byte[] ServerFileListData;
     internal class DownFileInfo
     {
         public string url;
-        /// <summary>相对路径</summary>
+        /// <summary>
+        /// 相对路径
+        /// </summary>
         public string fileName;
         public DownloadHandler fildData;
     }
@@ -37,7 +39,6 @@ public class HotUpdate : MonoBehaviour
     }
 
     #region 释放资源
-    ///<summary>释放资源 </summary>
     private void ReleaseResoures()
     {
         string url = Path.Combine(PathUtil.ReadPath, AppConst.FileListName);
@@ -48,7 +49,7 @@ public class HotUpdate : MonoBehaviour
 
     private void OnDownLoadReadPathFileListActoin(DownFileInfo file)
     {
-        m_ReadPathFildListData = file.fildData.data;
+        ReadPathFildListData = file.fildData.data;
         List<DownFileInfo> fileInfos = GetFildList(file.fildData.text, PathUtil.ReadPath);  //解析文件信息
         StartCoroutine(DownLoadFild(fileInfos, OnReleaseFileActoin, OnReleaseAllFileActoin));  //下载多文件
     }
@@ -62,14 +63,13 @@ public class HotUpdate : MonoBehaviour
 
     private void OnReleaseAllFileActoin()
     {
-        FileUtil.WriteFile(Path.Combine(PathUtil.ReadWritePath, AppConst.FileListName), m_ReadPathFildListData);
+        FileUtil.WriteFile(Path.Combine(PathUtil.ReadWritePath, AppConst.FileListName), ReadPathFildListData);
         CheckUpdate();
     }
     #endregion
 
 
     #region 检测更新
-    /// <summary>检测更新</summary>
     private void CheckUpdate()
     {
         string url = Path.Combine(AppConst.ResouresUrl, AppConst.FileListName);
@@ -80,7 +80,7 @@ public class HotUpdate : MonoBehaviour
 
     private void OnDownLoadServerFileListActoin(DownFileInfo file)
     {
-        m_ServerFileListData = file.fildData.data;
+        ServerFileListData = file.fildData.data;
         List<DownFileInfo> fileInfos = GetFildList(file.fildData.text, AppConst.ResouresUrl);   //获取资源服务器文件信息
         List<DownFileInfo> DownListFiles = new List<DownFileInfo>(); //下载文件集合
         for (int i = 0; i < fileInfos.Count; i++)
@@ -108,7 +108,7 @@ public class HotUpdate : MonoBehaviour
 
     private void OnUpdateAllFileActoin()
     {
-        FileUtil.WriteFile(Path.Combine(PathUtil.ReadWritePath, AppConst.FileListName), m_ServerFileListData);
+        FileUtil.WriteFile(Path.Combine(PathUtil.ReadWritePath, AppConst.FileListName), ServerFileListData);
         EnterGame();
     }
 
@@ -118,13 +118,13 @@ public class HotUpdate : MonoBehaviour
     #region 进入游戏
     private void EnterGame()
     {   //热更新测试
-        Manager.Resourece.ParseVersionFile();
+        //Manager.Resourece.ParseVersionFile();
         //Manager.Resourece.LoadUI("Login/Character", OnInstantiate);
-        Manager.Lua.Init((() =>     //异步加载 ->同步使用
-            {
-                Manager.Lua.StartLua("main");
-            })
-        );
+        //Manager.Lua.Init((() =>     //异步加载 ->同步使用
+        //    {
+        //        Manager.Lua.StartLua("main");
+        //    })
+        //);
     }
 
     private void OnInstantiate(UnityEngine.Object obj)

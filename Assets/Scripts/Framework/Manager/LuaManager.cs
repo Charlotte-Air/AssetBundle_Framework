@@ -13,7 +13,7 @@ public class LuaManager : MonoBehaviour
     /// <summary>
     /// 缓存Lua脚本集合
     /// </summary>
-    public Dictionary<string, byte[]> m_LuaScripts = new Dictionary<string, byte[]>();
+    public Dictionary<string, byte[]> LuaScripts = new Dictionary<string, byte[]>();
     /// <summary>
     /// Lua虚拟机
     /// </summary>
@@ -67,7 +67,7 @@ public class LuaManager : MonoBehaviour
     /// <param name="luascipts"></param>
     public void AddLuaScripts(string assetsName, byte[] luascipts)
     {
-        m_LuaScripts[assetsName] = luascipts;
+        LuaScripts[assetsName] = luascipts;
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ public class LuaManager : MonoBehaviour
         name = name.Replace(".", "/");
         string fileName = PathUtil.GetLuaPath(name);
         byte[] luaScripts = null;
-        if (!m_LuaScripts.TryGetValue(fileName, out luaScripts))
+        if (!LuaScripts.TryGetValue(fileName, out luaScripts))
             Debug.LogError("Lua Scripts is Not Exist");
         return luaScripts;
     }
@@ -95,7 +95,7 @@ public class LuaManager : MonoBehaviour
             Manager.Resourece.LoadLua(name, (UnityEngine.Object obj) =>
             {
                 AddLuaScripts(name, (obj as TextAsset).bytes);
-                if (m_LuaScripts.Count >= LuaNames.Count)
+                if (LuaScripts.Count >= LuaNames.Count)
                 {   //所有Lua加载完成时
                     InitAccomplish?.Invoke();
                     LuaNames.Clear();

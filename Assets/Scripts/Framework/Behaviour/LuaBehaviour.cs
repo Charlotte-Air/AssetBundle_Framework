@@ -5,40 +5,40 @@ using XLua;
 public class LuaBehaviour : MonoBehaviour
 {
     public string LuaName;
-    protected LuaTable m_ScriptEvn;
-    private  LuaEnv m_LuaEvn = Manager.Lua.LuaEnv;
-    private  Action  m_LuaInit;
-    private  Action  m_LuaUpdate;
-    private  Action  m_LuaOnDestroy;
+    protected LuaTable ScriptEvn;
+    private  LuaEnv LuaEvn = Manager.Lua.LuaEnv;
+    private  Action  LuaInit;
+    private  Action  LuaUpdate;
+    private  Action  LuaOnDestroy;
 
     void Awake()
     {
-        m_ScriptEvn = m_LuaEvn.NewTable();
+        ScriptEvn = LuaEvn.NewTable();
         //设置元表
-        LuaTable meat = m_LuaEvn.NewTable();
-        meat.Set("__index", m_LuaEvn.Global);
-        m_ScriptEvn.SetMetaTable(meat);
+        LuaTable meat = LuaEvn.NewTable();
+        meat.Set("__index", LuaEvn.Global);
+        ScriptEvn.SetMetaTable(meat);
         meat.Dispose();
-        m_ScriptEvn.Set("self", this);
+        ScriptEvn.Set("self", this);
     }
 
     public virtual void Init(string luaName)
     {
         //获取方法
-        m_LuaEvn.DoString(Manager.Lua.GetLuaScripts(luaName), luaName, m_ScriptEvn);
-        m_ScriptEvn.Get("OnInit", out m_LuaInit);
-        m_ScriptEvn.Get("Update", out m_LuaUpdate);
-        m_LuaInit?.Invoke();
+        LuaEvn.DoString(Manager.Lua.GetLuaScripts(luaName), luaName, ScriptEvn);
+        ScriptEvn.Get("OnInit", out LuaInit);
+        ScriptEvn.Get("Update", out LuaUpdate);
+        LuaInit?.Invoke();
     }
 
     void Update()
     {
-        m_LuaUpdate?.Invoke();
+        LuaUpdate?.Invoke();
     }
 
     void OnDestroy()
     {
-        m_LuaOnDestroy?.Invoke();
+        LuaOnDestroy?.Invoke();
         Clear();
     }
 
@@ -50,11 +50,11 @@ public class LuaBehaviour : MonoBehaviour
 
     protected virtual void Clear()
     {   //释放
-        m_LuaOnDestroy = null;
-        m_ScriptEvn?.Dispose();
-        m_ScriptEvn = null;
-        m_LuaInit = null;
-        m_LuaUpdate = null;
+        LuaOnDestroy = null;
+        ScriptEvn?.Dispose();
+        ScriptEvn = null;
+        LuaInit = null;
+        LuaUpdate = null;
     }
 
 }
