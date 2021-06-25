@@ -67,6 +67,7 @@ public class HotUpdate : MonoBehaviour
     }
     #endregion
 
+
     #region 检测更新
     /// <summary>检测更新</summary>
     private void CheckUpdate()
@@ -112,12 +113,18 @@ public class HotUpdate : MonoBehaviour
     }
 
     #endregion
+    
 
     #region 进入游戏
     private void EnterGame()
-    {
+    {   //热更新测试
         Manager.Resourece.ParseVersionFile();
-        Manager.Resourece.LoadUI("Login/Character", OnInstantiate);
+        //Manager.Resourece.LoadUI("Login/Character", OnInstantiate);
+        Manager.Lua.Init((() =>     //异步加载 ->同步使用
+            {
+                Manager.Lua.StartLua("main");
+            })
+        );
     }
 
     private void OnInstantiate(UnityEngine.Object obj)
@@ -131,6 +138,7 @@ public class HotUpdate : MonoBehaviour
     #endregion
 
 
+    #region 文件处理
 
     /// <summary>
     /// 单个文件下载
@@ -187,5 +195,7 @@ public class HotUpdate : MonoBehaviour
         }
         return downFileInfos;
     }
+
+    #endregion
 
 }

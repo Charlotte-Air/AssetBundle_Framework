@@ -2,13 +2,21 @@
 
 public class PathUtil
 {
-    ///<summary> Assets根目录 </summary>
+    ///<summary>
+    /// Assets根目录
+    /// </summary>
     public static readonly string AssetsPath = Application.dataPath;
-    ///<summary> Build输入目录 </summary>
+    ///<summary>
+    /// Build输入目录
+    /// </summary>
     public static readonly string BuildResourcesPath = AssetsPath + "/BuilResources/";
-    ///<summary> Build输出目录 </summary>
+    ///<summary>
+    /// Build输出目录
+    /// </summary>
     public static readonly string BuildeOutPath = Application.streamingAssetsPath;
-    ///<summary> Build资源路径 </summary>
+    ///<summary>
+    /// Build资源路径
+    /// </summary>
     public static string BundleResourcePath
     {
         get
@@ -19,10 +27,18 @@ public class PathUtil
         }
     }
 
-    /// <summary>只读目录</summary>
+    /// <summary>
+    /// 只读目录
+    /// </summary>
     public static readonly string ReadPath = Application.streamingAssetsPath;
-    /// <summary>可读写目录</summary>
+    /// <summary>
+    /// 可读写目录
+    /// </summary>
     public static readonly string ReadWritePath = Application.persistentDataPath;
+    /// <summary>
+    /// Lua目录路径
+    /// </summary>
+    public static readonly string LuaPath = "Assets/BuilResources/LuaScripts";
 
     /// <summary>
     /// 获取Unity相对路径
@@ -48,6 +64,8 @@ public class PathUtil
         return path.Trim().Replace("\\", "/");
     }
 
+
+    #region 获取资源接口
     ///<summary> 获取Lua路径 </summary>
     public static string GetLuaPath(string name)
     {
@@ -89,5 +107,8 @@ public class PathUtil
     {
         return string.Format("Assets/BuilResources/Sprite/{0}", name);
     }
+
+#endregion
+
 
 }

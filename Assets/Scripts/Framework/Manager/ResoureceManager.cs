@@ -8,7 +8,9 @@ using UObject = UnityEngine.Object;
 
 public class ResoureceManager : MonoBehaviour
 {
-    /// <summary> Bundle信息集合 </summary>
+    /// <summary>
+    /// Bundle信息集合
+    /// </summary>
     private Dictionary<string, BundleInfo> m_BundleInfos = new Dictionary<string, BundleInfo>();
     internal class BundleInfo
     {
@@ -36,6 +38,11 @@ public class ResoureceManager : MonoBehaviour
                 bundeInfo.Dependences.Add(info[j]);
             }
             m_BundleInfos.Add(bundeInfo.AssetsName,bundeInfo);
+
+            if (info[0].IndexOf("LuaScripts") > 0) //查找Lua文件夹
+            {
+                Manager.Lua.LuaNames.Add(info[0]);
+            }
         }
     }
 
@@ -68,49 +75,7 @@ public class ResoureceManager : MonoBehaviour
             action.Invoke(bundleRequest.asset);
         }
     }
-
-    /// <summary> 资源加载接口 </summary>
-    private void LoadAssest(string assestName, Action<UObject> action)
-    {
-#if UNITY_EDITOR //避免Build出错
-        if (AppConst.gameMode == GameMode.EditorMode)
-            EditorLoadAssest(assestName, action);
-#endif
-        if (AppConst.gameMode != GameMode.EditorMode)
-            StartCoroutine(LoadBundleAsync(assestName, action));
-    }
-
-    /// <summary>加载UI</summary>
-    public void LoadUI(string assetsName, Action<UnityEngine.Object> action = null)
-    {
-        LoadAssest(PathUtil.GetUIPath(assetsName), action);
-    }
-
-    /// <summary>加载音效</summary>
-    public void LoadMusic(string assetsName, Action<UnityEngine.Object> action = null)
-    {
-        LoadAssest(PathUtil.GetMusicPath(assetsName), action);
-    }
-
-    /// <summary>加载音乐</summary>
-    public void LoadSound(string assetsName, Action<UnityEngine.Object> action = null)
-    {
-        LoadAssest(PathUtil.GetSoundPath(assetsName), action);
-    }
-
-    /// <summary>加载特效</summary>
-    public void LoadEffect(string assetsName, Action<UnityEngine.Object> action = null)
-    {
-        LoadAssest(PathUtil.GetEffectPath(assetsName), action);
-    }
-
-    /// <summary>加载场景</summary>
-    public void LoadScone(string assetsName, Action<UnityEngine.Object> action = null)
-    {
-        LoadAssest(PathUtil.GetScenePath(assetsName), action);
-    }
-
-
+    
 #if UNITY_EDITOR
     /// <summary>
     /// 编译器环境加载资源
@@ -126,4 +91,73 @@ public class ResoureceManager : MonoBehaviour
         action?.Invoke(obj); //回调
     }
 #endif
+
+
+    /// <summary>
+    /// 加载资源
+    /// </summary>
+    private void LoadAssest(string assestName, Action<UObject> action)
+    {
+#if UNITY_EDITOR //避免Build出错
+        if (AppConst.gameMode == GameMode.EditorMode)
+            EditorLoadAssest(assestName, action);
+#endif
+        if (AppConst.gameMode != GameMode.EditorMode)
+            StartCoroutine(LoadBundleAsync(assestName, action));
+    }
+
+
+    #region 加载接口
+
+    /// <summary>
+    /// 加载UI
+    /// </summary>
+    public void LoadUI(string assetsName, Action<UnityEngine.Object> action = null)
+    {
+        LoadAssest(PathUtil.GetUIPath(assetsName), action);
+    }
+
+    /// <summary>
+    /// 加载音效
+    /// </summary>
+    public void LoadMusic(string assetsName, Action<UnityEngine.Object> action = null)
+    {
+        LoadAssest(PathUtil.GetMusicPath(assetsName), action);
+    }
+
+    /// <summary>
+    /// 加载音乐
+    /// </summary>
+    public void LoadSound(string assetsName, Action<UnityEngine.Object> action = null)
+    {
+        LoadAssest(PathUtil.GetSoundPath(assetsName), action);
+    }
+
+    /// <summary>
+    /// 加载特效
+    /// </summary>
+    public void LoadEffect(string assetsName, Action<UnityEngine.Object> action = null)
+    {
+        LoadAssest(PathUtil.GetEffectPath(assetsName), action);
+    }
+
+    /// <summary>
+    /// 加载场景
+    /// </summary>
+    public void LoadScone(string assetsName, Action<UnityEngine.Object> action = null)
+    {
+        LoadAssest(PathUtil.GetScenePath(assetsName), action);
+    }
+
+    /// <summary>
+    /// 加载Lua
+    /// </summary>
+    /// <param name="assetsName"></param>
+    /// <param name="action"></param>
+    public void LoadLua(string assetsName, Action<UnityEngine.Object> action = null)
+    {
+        LoadAssest(assetsName, action);
+    }
+    #endregion
+
 }

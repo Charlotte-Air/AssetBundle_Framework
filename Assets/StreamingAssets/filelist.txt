@@ -1,3 +1,0 @@
-Assets/BuilResources/UI/prefabs/Login/Character.prefab|ui\prefabs\login\character.prefab.ab|Assets/BuilResources/UI/Resources/BG_1.jpg|Assets/BuilResources/UI/Resources/Character_1.png
-Assets/BuilResources/UI/Resources/BG_1.jpg|ui\resources\bg_1.jpg.ab
-Assets/BuilResources/UI/Resources/Character_1.png|ui\resources\character_1.png.ab

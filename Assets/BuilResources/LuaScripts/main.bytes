@@ -1,0 +1,18 @@
+Manager = CS.Manager;
+
+local group=
+{
+    "Main",
+    "UI",
+    "Box",
+}
+
+Manager.UI:SetGroup(group);
+
+function Test()
+    print("Hello,World")
+    Manager.UI:ShowUI("TestUI","UI","UI.TestUI")
+    Manager.UI:ShowUI("Login/Character","Main","UI.TestUI")
+end
+
+Test()

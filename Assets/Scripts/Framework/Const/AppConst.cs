@@ -14,8 +14,8 @@ public enum GameMode
 public class AppConst
 {
     public const  string   BundleExtension = ".ab";
-    public const  string   FileListName    = "filelist.txt";
-    public static GameMode gameMode        = GameMode.EditorMode;
+    public const  string   FileListName = "filelist.txt";
+    public static GameMode gameMode = GameMode.EditorMode;
     /// <summary>热更新服务器地址 </summary>
     public const string ResouresUrl = "http://192.168.3.2/AssetBundles";
 }

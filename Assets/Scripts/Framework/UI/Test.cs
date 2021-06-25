@@ -22,10 +22,4 @@ public class Test : MonoBehaviour
         go.SetActive(true);
         go.transform.localPosition = Vector3.zero;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
