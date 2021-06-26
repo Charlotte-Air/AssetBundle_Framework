@@ -118,13 +118,18 @@ public class HotUpdate : MonoBehaviour
     #region 进入游戏
     private void EnterGame()
     {   //热更新测试
-        //Manager.Resourece.ParseVersionFile();
-        //Manager.Resourece.LoadUI("Login/Character", OnInstantiate);
-        //Manager.Lua.Init((() =>     //异步加载 ->同步使用
-        //    {
-        //        Manager.Lua.StartLua("main");
-        //    })
-        //);
+        Manager.Event.Subscribe(1, OnLuaInit);
+        Manager.Lua.Init();
+    }
+
+    private void OnLuaInit(object args)
+    {
+        Manager.Lua.StartLua("main");
+    }
+
+    private void OnApplicationQuit()
+    {
+        Manager.Event.UnSubscribe(1, OnLuaInit);
     }
 
     private void OnInstantiate(UnityEngine.Object obj)

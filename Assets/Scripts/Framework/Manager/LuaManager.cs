@@ -45,10 +45,11 @@ public class LuaManager : MonoBehaviour
         }
     }
 
-    public Action InitAccomplish;
-    public void Init(Action action)
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    public void Init()
     {
-        InitAccomplish += action;
         LuaEnv = new LuaEnv();
         LuaEnv.AddLoader(Loader);
 
@@ -97,7 +98,7 @@ public class LuaManager : MonoBehaviour
                 AddLuaScripts(name, (obj as TextAsset).bytes);
                 if (LuaScripts.Count >= LuaNames.Count)
                 {   //所有Lua加载完成时
-                    InitAccomplish?.Invoke();
+                    Manager.Event.PerformEvent(1);
                     LuaNames.Clear();
                     LuaNames = null;
                 }
@@ -127,7 +128,7 @@ public class LuaManager : MonoBehaviour
             byte[] file = File.ReadAllBytes(fileName);
             AddLuaScripts(PathUtil.GetUnityPath(fileName), file);
         }
-        InitAccomplish?.Invoke();
+        Manager.Event.PerformEvent(1);
     }
 #endif
 

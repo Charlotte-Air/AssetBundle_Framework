@@ -12,6 +12,10 @@ public class ResoureceManager : MonoBehaviour
     /// Bundle信息集合
     /// </summary>
     private Dictionary<string, BundleInfo> BundleInfos = new Dictionary<string, BundleInfo>();
+    /// <summary>
+    /// AssetBundle集合
+    /// </summary>
+    private Dictionary<string, AssetBundle> assetBundles = new Dictionary<string, AssetBundle>();
     internal class BundleInfo
     {
         public string AssetsName;
@@ -56,24 +60,53 @@ public class ResoureceManager : MonoBehaviour
         string bundleName = BundleInfos[assetsName].BundleName;
         string bundlePath = Path.Combine(PathUtil.BundleResourcePath, bundleName);
         List<string> dependences = BundleInfos[assetsName].Dependences;
-        if (dependences != null && dependences.Count > 0)
+
+        AssetBundle bundle = GetBundle(bundleName);
+        if (bundle == null)
         {
-            for (int i = 0; i < dependences.Count; i++)
+            if (dependences != null && dependences.Count > 0)
             {
-                yield return LoadBundleAsync(dependences[i]);  //递归调用
+                for (int i = 0; i < dependences.Count; i++)
+                {
+                    yield return LoadBundleAsync(dependences[i]);  //递归调用
+                }
             }
+
+            AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(bundlePath); //加载资源AB包
+            yield return request;
+            bundle = request.assetBundle;
+            assetBundles.Add(bundleName,request.assetBundle);
         }
 
-        AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(bundlePath); //加载资源AB包
-        yield return request;
+        if (assetsName.EndsWith(".unity"))  //Packge Builde模式下屏蔽加载 
+        {
+            action?.Invoke(null);
+            yield break;
+        }
 
-        AssetBundleRequest bundleRequest = request.assetBundle.LoadAssetAsync(assetsName); //加载资源
+        AssetBundleRequest bundleRequest = bundle.LoadAssetAsync(assetsName); //加载资源
         yield return bundleRequest;
+
         Debug.Log("->PackgeBundleLoadAssest");
         if (action != null && bundleRequest != null)
         {
             action.Invoke(bundleRequest.asset);
         }
+    }
+
+    /// <summary>
+    /// 获取AssetBundle
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    AssetBundle GetBundle(string name)
+    {
+        AssetBundle bundle = null;
+        if (assetBundles.TryGetValue(name, out bundle))
+        {
+            return bundle;
+        }
+        return null;
     }
     
 #if UNITY_EDITOR
@@ -101,8 +134,8 @@ public class ResoureceManager : MonoBehaviour
 #if UNITY_EDITOR //避免Build出错
         if (AppConst.gameMode == GameMode.EditorMode)
             EditorLoadAssest(assestName, action);
+        else
 #endif
-        if (AppConst.gameMode != GameMode.EditorMode)
             StartCoroutine(LoadBundleAsync(assestName, action));
     }
 
@@ -118,7 +151,7 @@ public class ResoureceManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 加载音效
+    /// 加载音乐
     /// </summary>
     public void LoadMusic(string assetsName, Action<UnityEngine.Object> action = null)
     {
@@ -126,7 +159,7 @@ public class ResoureceManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 加载音乐
+    /// 加载音效
     /// </summary>
     public void LoadSound(string assetsName, Action<UnityEngine.Object> action = null)
     {

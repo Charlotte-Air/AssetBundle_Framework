@@ -1,44 +1,50 @@
 ManifestFileVersion: 0
-CRC: 2420619203
+CRC: 1467179223
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: luascripts/main.bytes.ab
+      Name: audio/music/music_1.wav.ab
       Dependencies: {}
     Info_1:
-      Name: luascripts/entity/playerentity.bytes.ab
+      Name: audio/sound/sound_1.wav.ab
       Dependencies: {}
     Info_2:
-      Name: luascripts/scene/test1.bytes.ab
+      Name: luascripts/main.bytes.ab
       Dependencies: {}
     Info_3:
-      Name: luascripts/scene/test2.bytes.ab
+      Name: luascripts/entity/playerentity.bytes.ab
       Dependencies: {}
     Info_4:
-      Name: luascripts/ui/testui.bytes.ab
+      Name: luascripts/scene/test1.bytes.ab
       Dependencies: {}
     Info_5:
-      Name: model/prefabs/player.prefab.ab
+      Name: luascripts/scene/test2.bytes.ab
       Dependencies: {}
     Info_6:
-      Name: scenes/test1.unity.ab
+      Name: luascripts/ui/testui.bytes.ab
       Dependencies: {}
     Info_7:
-      Name: scenes/test2.unity.ab
+      Name: model/prefabs/player.prefab.ab
       Dependencies: {}
     Info_8:
+      Name: scenes/test1.unity.ab
+      Dependencies: {}
+    Info_9:
+      Name: scenes/test2.unity.ab
+      Dependencies: {}
+    Info_10:
       Name: ui/prefabs/testui.prefab.ab
       Dependencies:
         Dependency_0: ui/resources/bg_1.jpg.ab
         Dependency_1: ui/resources/character_1.png.ab
-    Info_9:
+    Info_11:
       Name: ui/prefabs/login/character.prefab.ab
       Dependencies:
         Dependency_0: ui/resources/bg_1.jpg.ab
         Dependency_1: ui/resources/character_1.png.ab
-    Info_10:
+    Info_12:
       Name: ui/resources/bg_1.jpg.ab
       Dependencies: {}
-    Info_11:
+    Info_13:
       Name: ui/resources/character_1.png.ab
       Dependencies: {}

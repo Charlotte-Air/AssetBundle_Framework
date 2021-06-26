@@ -104,11 +104,11 @@ public class PathUtil
     /// </summary>
     public static string GetModelPath(string name)
     {
-        return string.Format("Assets/BuilResources/Model/prefabs/{0}.prefab", name);
+        return string.Format("Assets/BuilResources/Model/prefabs/{0}.prefab",name);
     }
 
     ///<summary>
-    /// 获取音效路径
+    /// 获取音乐路径
     /// </summary>
     public static string GetMusicPath(string name)
     {
@@ -116,7 +116,7 @@ public class PathUtil
     }
 
     ///<summary>
-    /// 获取音乐路径
+    /// 获取音效路径
     /// </summary>
     public static string GetSoundPath(string name)
     {

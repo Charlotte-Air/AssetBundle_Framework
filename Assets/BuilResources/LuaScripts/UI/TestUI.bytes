@@ -4,7 +4,66 @@ end
 
 function OnOpen()
     print("Lua->UI->OnOpen")
-    Manager.Scene:LoadScene("Test1","scene.Test1")
+    --Manager.Scene:LoadScene("Test1","scene.Test1")
+    local PlayMusic = self.transform:Find("PlayMusic"):GetComponent("Button")
+    local StopMusic = self.transform:Find("StopMusic"):GetComponent("Button")
+    local PauseMusic = self.transform:Find("PauseMusic"):GetComponent("Button")
+    local UnPauseMusic = self.transform:Find("UnPauseMusic"):GetComponent("Button")
+    local PlaySound = self.transform:Find("PlaySound"):GetComponent("Button")
+    local MusicVolume = self.transform:Find("MusicVolume"):GetComponent("Slider")
+    local SoundVolume = self.transform:Find("SoundVolume"):GetComponent("Slider")
+
+    PlayMusic:OnClickSet
+    (
+        function ()
+            Manager.Sound:PlayMusic("Music_1.wav")
+        end
+    )
+
+    PauseMusic:OnClickSet
+    (
+        function ()
+            Manager.Sound:PauseMusic()
+        end
+    )
+
+    UnPauseMusic:OnClickSet
+    (
+        function ()
+            Manager.Sound:OnUnPauseMusic()
+        end
+    )
+
+    StopMusic:OnClickSet
+    (
+        function ()
+            Manager.Sound:StopMusic()
+        end
+    )
+
+    PlaySound:OnClickSet
+    (
+        function ()
+            Manager.Sound:PlaySound("Sound_1.wav")
+        end
+    )
+
+    MusicVolume:OnValueChangedSet 
+    (
+        function (volume)
+            Manager.Sound:SetMusicVolume(volume)
+        end
+    )
+
+    SoundVolume:OnValueChangedSet 
+    (
+        function (volume)
+            Manager.Sound:SetSoundVolume(volume)
+        end
+    )
+    
+    MusicVolume.value =1
+    SoundVolume.value =1
 end
 
 function Update()

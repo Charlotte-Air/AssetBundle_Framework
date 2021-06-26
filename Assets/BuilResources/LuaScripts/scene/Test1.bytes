@@ -16,8 +16,8 @@ end
 
 function OnEnter()
     print("Lua->Test1->OnEnter")
-    Manager.Scene:LoadScene("Test2","scene.Test2")
-    Manager.Scene:SetActive(self.SceneName)
+    Manager.Scene:ChangeScene("Test2","scene.Test2")
+    --Manager.Scene:SetActive(self.SceneName)
 end
 
 function OnQuit()
