@@ -15,12 +15,18 @@ public class ResoureceManager : MonoBehaviour
     /// <summary>
     /// AssetBundle集合
     /// </summary>
-    private Dictionary<string, AssetBundle> assetBundles = new Dictionary<string, AssetBundle>();
+    private Dictionary<string, BundlData> assetBundles = new Dictionary<string, BundlData>();
     internal class BundleInfo
     {
         public string AssetsName;
         public string BundleName;
         public List<string> Dependences;
+    }
+    internal class BundlData
+    {
+        public AssetBundle Bundle;
+        public int Count; //引用计数
+        public BundlData(AssetBundle ab) {  Bundle = ab ; Count = 1;  }
     }
 
     /// <summary>
@@ -54,28 +60,37 @@ public class ResoureceManager : MonoBehaviour
     /// 异步加载资源
     /// </summary>
     /// <param name="assetsName">资源名</param>
-    /// <param name="action">完成回调</param>
+    /// <param name="action">回调</param>
     IEnumerator LoadBundleAsync(string assetsName,Action<UObject> action = null)
     {
         string bundleName = BundleInfos[assetsName].BundleName;
         string bundlePath = Path.Combine(PathUtil.BundleResourcePath, bundleName);
         List<string> dependences = BundleInfos[assetsName].Dependences;
 
-        AssetBundle bundle = GetBundle(bundleName);
+        BundlData bundle = GetBundle(bundleName);
         if (bundle == null)
         {
-            if (dependences != null && dependences.Count > 0)
+            UObject obj = Manager.Pool.TakeObject("AssestBundle", bundleName); //取对象池Bundle
+            if (obj != null)
             {
-                for (int i = 0; i < dependences.Count; i++)
-                {
-                    yield return LoadBundleAsync(dependences[i]);  //递归调用
-                }
+                AssetBundle ab = obj as AssetBundle;
+                bundle = new BundlData(ab);
             }
+            else
+            {
+                AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(bundlePath); //加载资源AB包
+                yield return request;
+                bundle = new BundlData(request.assetBundle);
+            }
+            assetBundles.Add(bundleName, bundle);
+        }
 
-            AssetBundleCreateRequest request = AssetBundle.LoadFromFileAsync(bundlePath); //加载资源AB包
-            yield return request;
-            bundle = request.assetBundle;
-            assetBundles.Add(bundleName,request.assetBundle);
+        if (dependences != null && dependences.Count > 0) //检测依赖资源
+        {
+            for (int i = 0; i < dependences.Count; i++)
+            {
+                yield return LoadBundleAsync(dependences[i]);  //依赖资源加载
+            }
         }
 
         if (assetsName.EndsWith(".unity"))  //Packge Builde模式下屏蔽加载 
@@ -84,31 +99,70 @@ public class ResoureceManager : MonoBehaviour
             yield break;
         }
 
-        AssetBundleRequest bundleRequest = bundle.LoadAssetAsync(assetsName); //加载资源
-        yield return bundleRequest;
-
-        Debug.Log("->PackgeBundleLoadAssest");
-        if (action != null && bundleRequest != null)
+        if (action == null) //当依赖资源时退出循环
         {
-            action.Invoke(bundleRequest.asset);
+            yield break;
         }
+
+        AssetBundleRequest bundleRequest = bundle.Bundle.LoadAssetAsync(assetsName); //加载资源
+        yield return bundleRequest;
+        Debug.Log("->PackgeBundleLoadAssest");
+        action?.Invoke(bundleRequest?.asset);
     }
 
     /// <summary>
-    /// 获取AssetBundle
+    /// 获取BundleData
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="name">资源名</param>
     /// <returns></returns>
-    AssetBundle GetBundle(string name)
+    BundlData GetBundle(string name)
     {
-        AssetBundle bundle = null;
+        BundlData bundle = null;
         if (assetBundles.TryGetValue(name, out bundle))
         {
+            bundle.Count++;
             return bundle;
         }
         return null;
     }
-    
+
+    /// <summary>
+    /// 减去Bundle依赖引用计数
+    /// </summary>
+    /// <param name="assetsName">资源名</param>
+    public void MinusBundleCount(string assetsName)
+    {
+        string bundleName = BundleInfos[assetsName].BundleName;
+        MinusOneBundleCount(bundleName);
+        List<string> dependences = BundleInfos[assetsName].Dependences;
+        if (dependences != null)
+        {
+            foreach (string key in dependences)
+            {
+                string name = BundleInfos[key].BundleName;
+                MinusOneBundleCount(name);
+            }
+        }
+    }
+
+    private void MinusOneBundleCount(string bundleName)
+    {
+        if(assetBundles.TryGetValue(bundleName,out BundlData bundldata))
+        {
+            if (bundldata.Count > 0)
+            {
+                bundldata.Count--;
+                Debug.LogFormat("{0}引用数:{1}", bundleName, bundldata.Count);
+            }
+            if (bundldata.Count <= 0)
+            {
+                Debug.LogFormat("{0}放入Bundle对象池", bundleName);
+                Manager.Pool.RecycleObject("AssetsBundle", bundleName, bundldata.Bundle);
+                assetBundles.Remove(bundleName);
+            }
+        }
+    }
+
 #if UNITY_EDITOR
     /// <summary>
     /// 编译器环境加载资源
@@ -127,16 +181,28 @@ public class ResoureceManager : MonoBehaviour
 
 
     /// <summary>
-    /// 加载资源
+    ///  加载资源
     /// </summary>
+    /// <param name="assestName">资源名</param>
+    /// <param name="action">回调</param>
     private void LoadAssest(string assestName, Action<UObject> action)
     {
 #if UNITY_EDITOR //避免Build出错
         if (AppConst.gameMode == GameMode.EditorMode)
             EditorLoadAssest(assestName, action);
-        else
 #endif
+        if (AppConst.gameMode != GameMode.EditorMode)
             StartCoroutine(LoadBundleAsync(assestName, action));
+    }
+
+    /// <summary>
+    /// 释放资源
+    /// </summary>
+    /// <param name="name">资源名</param>
+    public void ReleaseBundle(UObject obj)
+    {
+        AssetBundle ab =  obj as AssetBundle;
+        ab.Unload(true);
     }
 
 
@@ -145,6 +211,8 @@ public class ResoureceManager : MonoBehaviour
     /// <summary>
     /// 加载UI
     /// </summary>
+    /// <param name="assetsName">资源名</param>
+    /// <param name="action">回调</param>
     public void LoadUI(string assetsName, Action<UnityEngine.Object> action = null)
     {
         LoadAssest(PathUtil.GetUIPath(assetsName), action);
@@ -153,6 +221,8 @@ public class ResoureceManager : MonoBehaviour
     /// <summary>
     /// 加载音乐
     /// </summary>
+    /// <param name="assetsName">资源名</param>
+    /// <param name="action">回调</param>
     public void LoadMusic(string assetsName, Action<UnityEngine.Object> action = null)
     {
         LoadAssest(PathUtil.GetMusicPath(assetsName), action);
@@ -161,6 +231,8 @@ public class ResoureceManager : MonoBehaviour
     /// <summary>
     /// 加载音效
     /// </summary>
+    /// <param name="assetsName">资源名</param>
+    /// <param name="action">回调</param>
     public void LoadSound(string assetsName, Action<UnityEngine.Object> action = null)
     {
         LoadAssest(PathUtil.GetSoundPath(assetsName), action);
@@ -169,6 +241,8 @@ public class ResoureceManager : MonoBehaviour
     /// <summary>
     /// 加载特效
     /// </summary>
+    /// <param name="assetsName">资源名</param>
+    /// <param name="action">回调</param>
     public void LoadEffect(string assetsName, Action<UnityEngine.Object> action = null)
     {
         LoadAssest(PathUtil.GetEffectPath(assetsName), action);
@@ -177,6 +251,8 @@ public class ResoureceManager : MonoBehaviour
     /// <summary>
     /// 加载场景
     /// </summary>
+    /// <param name="assetsName">资源名</param>
+    /// <param name="action">回调</param>
     public void LoadScone(string assetsName, Action<UnityEngine.Object> action = null)
     {
         LoadAssest(PathUtil.GetScenePath(assetsName), action);
@@ -185,8 +261,8 @@ public class ResoureceManager : MonoBehaviour
     /// <summary>
     /// 加载Lua
     /// </summary>
-    /// <param name="assetsName"></param>
-    /// <param name="action"></param>
+    /// <param name="assetsName">资源名</param>
+    /// <param name="action">回调</param>
     public void LoadLua(string assetsName, Action<UnityEngine.Object> action = null)
     {
         LoadAssest(assetsName, action);
@@ -195,6 +271,8 @@ public class ResoureceManager : MonoBehaviour
     /// <summary>
     /// 加载模型
     /// </summary>
+    /// <param name="assetsName">资源名</param>
+    /// <param name="action">回调</param>
     public void LoadPrefab(string assetsName, Action<UnityEngine.Object> action = null)
     {
         LoadAssest(assetsName, action);

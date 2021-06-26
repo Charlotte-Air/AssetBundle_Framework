@@ -54,22 +54,27 @@ public class UIManager : MonoBehaviour
     public void ShowUI(string uiName,string group,string luaName)
     {
         GameObject ui = null;
-        if (UIs.TryGetValue(uiName, out ui)) //查找集合是否已经加载过
+        Transform parent = GetGroup(group);
+        string uiPath= PathUtil.GetUIPath(uiName);
+        Object uiObj = Manager.Pool.TakeObject("UI", uiPath);
+
+        if (uiObj != null)
         {
-            UILogic uiLogic = ui.GetComponent<UILogic>();
-            uiLogic.OnOpen();
+            ui = uiObj as GameObject;
+            ui.transform.SetParent(parent, false);
+            UI openui = ui.GetComponent<UI>();
+            openui.OnOpen();
             return;
         }
 
-        Manager.Resourece.LoadUI(uiName, (UnityEngine.Object obj) =>
+        Manager.Resourece.LoadUI(uiName, (Object obj) =>
         {
             ui =Instantiate(obj) as GameObject;
-            UIs.Add(uiName,ui);
-            Transform parent = GetGroup(group);
             ui.transform.SetParent(parent, false);
-            UILogic uiLogic = ui.AddComponent<UILogic>();
-            uiLogic.Init(luaName);
-            uiLogic.OnOpen();
+            UI baseUI  = ui.AddComponent<UI>();
+            baseUI.AssestName = uiPath;
+            baseUI.Init(luaName);
+            baseUI.OnOpen();
         });
     }
 }

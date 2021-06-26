@@ -10,6 +10,8 @@ function OnOpen()
     local PauseMusic = self.transform:Find("PauseMusic"):GetComponent("Button")
     local UnPauseMusic = self.transform:Find("UnPauseMusic"):GetComponent("Button")
     local PlaySound = self.transform:Find("PlaySound"):GetComponent("Button")
+    local Pool = self.transform:Find("Pool"):GetComponent("Button")
+    local Close = self.transform:Find("Close"):GetComponent("Button")
     local MusicVolume = self.transform:Find("MusicVolume"):GetComponent("Slider")
     local SoundVolume = self.transform:Find("SoundVolume"):GetComponent("Slider")
 
@@ -17,6 +19,20 @@ function OnOpen()
     (
         function ()
             Manager.Sound:PlayMusic("Music_1.wav")
+        end
+    )
+
+    Pool:OnClickSet
+    (
+        function ()
+            Manager.UI:ShowUI("Login/Character","UI","ui.TestUI")
+        end
+    )
+
+    Close:OnClickSet
+    (
+        function ()
+            self:OnClose()
         end
     )
 
@@ -47,8 +63,9 @@ function OnOpen()
             Manager.Sound:PlaySound("Sound_1.wav")
         end
     )
+    
 
-    MusicVolume:OnValueChangedSet 
+    MusicVolume:OnValueChangedSet
     (
         function (volume)
             Manager.Sound:SetMusicVolume(volume)

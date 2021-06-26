@@ -25,6 +25,6 @@ Assets/BuilResources/Plugins/xlua.bundle/Contents/MacOS/xlua|plugins\xlua.bundle
 Assets/BuilResources/Scenes/Test1.unity|scenes\test1.unity.ab
 Assets/BuilResources/Scenes/Test2.unity|scenes\test2.unity.ab
 Assets/BuilResources/UI/prefabs/TestUI.prefab|ui\prefabs\testui.prefab.ab|Assets/BuilResources/UI/Resources/BG_1.jpg|Assets/BuilResources/UI/Resources/Character_1.png
-Assets/BuilResources/UI/prefabs/Login/Character.prefab|ui\prefabs\login\character.prefab.ab|Assets/BuilResources/UI/Resources/BG_1.jpg|Assets/BuilResources/UI/Resources/Character_1.png
+Assets/BuilResources/UI/prefabs/Login/Character.prefab|ui\prefabs\login\character.prefab.ab|Assets/BuilResources/UI/Resources/Character_1.png
 Assets/BuilResources/UI/Resources/BG_1.jpg|ui\resources\bg_1.jpg.ab
 Assets/BuilResources/UI/Resources/Character_1.png|ui\resources\character_1.png.ab

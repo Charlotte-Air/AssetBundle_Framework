@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1467179223
+CRC: 3491381203
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -40,8 +40,7 @@ AssetBundleManifest:
     Info_11:
       Name: ui/prefabs/login/character.prefab.ab
       Dependencies:
-        Dependency_0: ui/resources/bg_1.jpg.ab
-        Dependency_1: ui/resources/character_1.png.ab
+        Dependency_0: ui/resources/character_1.png.ab
     Info_12:
       Name: ui/resources/bg_1.jpg.ab
       Dependencies: {}

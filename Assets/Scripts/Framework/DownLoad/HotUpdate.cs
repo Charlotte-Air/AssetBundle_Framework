@@ -118,8 +118,8 @@ public class HotUpdate : MonoBehaviour
     #region 进入游戏
     private void EnterGame()
     {   //热更新测试
-        Manager.Event.Subscribe(1, OnLuaInit);
-        Manager.Lua.Init();
+        //Manager.Event.Subscribe(1, OnLuaInit);
+        //Manager.Lua.Init();
     }
 
     private void OnLuaInit(object args)

@@ -26,5 +26,3 @@ function Test()
     Manager.UI:ShowUI("TestUI","UI","ui.TestUI")
     --Manager.Scene:LoadScene("Test1","scene.Test1")
 end
-
-Test()

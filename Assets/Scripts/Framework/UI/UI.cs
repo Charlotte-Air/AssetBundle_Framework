@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
 
-public class UILogic : LuaBehaviour
+public class UI : LuaBehaviour
 {
     private Action LuaOnOpen;
     private Action LuaOnClose;
+    public string AssestName;
 
     /// <summary>
     /// 初始化
@@ -31,6 +32,7 @@ public class UILogic : LuaBehaviour
     public void OnClose()
     {
         LuaOnClose?.Invoke();
+        Manager.Pool.RecycleObject("UI", AssestName, this.gameObject);
     }
 
     /// <summary>

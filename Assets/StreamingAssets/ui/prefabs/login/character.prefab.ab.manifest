@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 209869213
+CRC: 3429936181
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2259e36d6dcc81302cd42e0915d4885b
+    Hash: 52772453085f9994effdd20caf6efa80
   TypeTreeHash:
     serializedVersion: 2
     Hash: ae0852c618020c50bb45f70c51ddc49b
@@ -25,5 +25,4 @@ SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/BuilResources/UI/prefabs/Login/Character.prefab
 Dependencies:
-- X:/@Air_XLuaFramework/Assets/StreamingAssets/ui/resources/bg_1.jpg.ab
 - X:/@Air_XLuaFramework/Assets/StreamingAssets/ui/resources/character_1.png.ab
