@@ -63,6 +63,11 @@ public class ResoureceManager : MonoBehaviour
     /// <param name="action">回调</param>
     IEnumerator LoadBundleAsync(string assetsName,Action<UObject> action = null)
     {
+        if (!BundleInfos.ContainsKey(assetsName))
+        {
+            yield break;
+        }
+
         string bundleName = BundleInfos[assetsName].BundleName;
         string bundlePath = Path.Combine(PathUtil.BundleResourcePath, bundleName);
         List<string> dependences = BundleInfos[assetsName].Dependences;

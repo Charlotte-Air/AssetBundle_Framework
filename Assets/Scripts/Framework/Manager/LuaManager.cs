@@ -99,7 +99,7 @@ public class LuaManager : MonoBehaviour
                 AddLuaScripts(name, (obj as TextAsset).bytes);
                 if (LuaScripts.Count >= LuaNames.Count)
                 {   //所有Lua加载完成时
-                    Manager.Event.PerformEvent(1);
+                    Manager.Event.PerformEvent(10001);
                     LuaNames.Clear();
                     LuaNames = null;
                 }
@@ -129,7 +129,7 @@ public class LuaManager : MonoBehaviour
             byte[] file = File.ReadAllBytes(fileName);
             AddLuaScripts(PathUtil.GetUnityPath(fileName), file);
         }
-        Manager.Event.PerformEvent(1);
+        Manager.Event.PerformEvent(10001);
     }
 #endif
 

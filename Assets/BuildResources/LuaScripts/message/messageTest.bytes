@@ -1,0 +1,11 @@
+local messageTest = Class(messageBase)
+
+function messageTest:ctor()
+    self:add_req_res("first_test",1,"id","user","passworld","listTest")
+end
+
+function messageTest:res_first_test(message)
+    Log.Warning(message);
+end
+
+return messageTest;

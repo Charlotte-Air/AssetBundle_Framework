@@ -1,30 +1,30 @@
-local messageBase = Class()
+local messageBase = Class();
 
 --消息注册（消息名,消息ID,参数列表)
 function messageBase:add_req_res(msg_name,msg_id,...)
-    local keys = {...}
+    local Keys = {...}
 
     --消息请求
     self["req_"..msg_name] = function(self,...)
         local Values = {...}
-        if #keys ~= #Values then
+        if #Keys ~= #Values then
             Log.Error("参数不正确:",msg_name)
         end
         local send_data = {}
         for i= 1,#Keys do
-            send_data[keys[i]] = Values[i]
+            send_data[Keys[i]] = Values[i]
         end
-        msg_mgr.send_msg(msg_id,send_data)
+        messageMgr.send_msg(msg_id,send_data)
     end
 
     --消息接收
     if type(self["res_"..msg_name]) == "function" then
-        msg_mgr.register
+        messageMgr.register
         (
             msg_id,
             function(data)
                 local msg = Json.decode(data)
-                if msg.code ~= o then
+                if msg.code ~= 0 then
                     Log.Error("错误码:",msg.code)
                     return
                 end

@@ -18,14 +18,15 @@ function OnOpen()
     PlayMusic:OnClickSet
     (
         function ()
-            Manager.Sound:PlayMusic("Music_1.wav")
+            Manager.Sound:PlayMusic("Music_1.mp3")
         end
     )
 
     Pool:OnClickSet
     (
         function ()
-            Manager.UI:ShowUI("Login/Character","UI","ui.TestUI")
+            Manager.UI:ShowUI("Character","UI","entity.PlayerEntity");
+            --messageMgr.get.msg("messageTest"):req_first_test(1000,"Charlotte","555",{1,3,5});
         end
     )
 
@@ -60,7 +61,7 @@ function OnOpen()
     PlaySound:OnClickSet
     (
         function ()
-            Manager.Sound:PlaySound("Sound_1.wav")
+            Manager.Sound:PlaySound("Sound_1.mp3")
         end
     )
     

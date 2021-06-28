@@ -1,10 +1,11 @@
-﻿using System;
+﻿ using System;
 using UnityEngine;
 
 public class UI : LuaBehaviour
 {
     private Action LuaOnOpen;
     private Action LuaOnClose;
+    private Action LuaCharacterInit;
     public string AssestName;
 
     /// <summary>
@@ -43,5 +44,11 @@ public class UI : LuaBehaviour
         base.Clear();
         LuaOnOpen = null;
         LuaOnClose = null;
+    }
+
+    public void CharacterInit()
+    {
+        this.gameObject.SetActive(false);
+        this.gameObject.SetActive(true);
     }
 }

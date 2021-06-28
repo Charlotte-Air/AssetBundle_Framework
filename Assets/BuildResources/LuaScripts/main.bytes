@@ -4,8 +4,11 @@ Vector3 = CS.UnityEngin.Vector3;
 Input = CS.UnityEngin.Input;
 KeyCode = CS.UnityEngin.KeyCode;
 Time = CS.UnityEngin.Time;
-Log = require("Log")
-Json = require('rapidjson')
+Log = require("Log");
+Json = require('rapidjson');
+require("class");
+--messageBase = require "message.messageBase";
+--Mgr = require "messageMgr";
 
 local ui_group=
 {
@@ -24,8 +27,9 @@ local entity_group=
 Manager.UI:SetGroup(ui_group)
 Manager.Entity:SetEnitiyGroup(entity_group)
 function Test()
-    print("Hello,World")
-
-    --Manager.UI:ShowUI("TestUI","UI","ui.TestUI")
+    Manager.UI:ShowUI("TestUI","UI","ui.TestUI")
+    --sg_mgr.Init();
+    --Manager.Net:Init();
+    --Manager.Net:ConnectService("192.168.3.2",5209);
     --Manager.Scene:LoadScene("Test1","scene.Test1")
 end

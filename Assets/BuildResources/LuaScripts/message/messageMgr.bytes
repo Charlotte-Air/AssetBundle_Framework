@@ -1,0 +1,55 @@
+local messageMgr = {}
+--消息模块列表集合
+local msg_model_list = {}
+--消息回调列表集合
+local msg_responses = {}
+--消息模块名字列表(需手动添加)
+local msg_name_list =
+{
+    "messageTest",
+}
+
+
+--初始化
+function messageMgr.Init()
+    for k,v in pairs(msg_name_list) do
+        msg_model_list[v] = require("message."..v).new()
+    end
+end
+
+--获取消息
+function messageMgr.get.msg(key)
+    if not msg_model_list[key] then
+        Log.Error("脚本不存在:"..key)
+        return
+    end
+    return msg_model_list[key]
+end
+
+--注册消息
+function messageMgr.register(msg_id,func)
+    if msg_responses[msg_id] then
+        Log.Error("消息已注册:"..msg_id)
+    end
+    msg_responses[msg_id] = func
+end
+
+--接收消息
+function ReceiveMessage(msg_id,message)
+    Log.Info("<color=#A0522D>Receive->:ID:"..msg_id..":"..message.."</color>")
+    if type(msg_responses[msg_id]) == "function" then
+        msg_responses[msg_id](message)
+    else
+        Log.Error("消息没有Res:",msg_id)
+    end
+end
+
+--发送消息
+function messageMgr.send_msg(msg_id,send_data)
+    local str = Json.encode(send_data)
+    Log.Info("<color=#9400D3>Send->:ID:"..msg_id..":"..str.."</color>")
+    Manager.Net:SendMessage(msg_id,str)
+end
+
+
+return messageMgr

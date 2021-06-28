@@ -14,7 +14,7 @@ local function read_table(tab,tab_count)
     local str = "";
     for k,v in pairs(tab) do
         if type(v) == "table" then
-            str = str .. symbool .. k .. ":\n"..symbol .. "{\n"..read_table(v,tab_count+1)..symbol.."}\n";
+            str = str .. symbol .. k .. ":\n"..symbol .. "{\n"..read_table(v,tab_count+1)..symbol.."}\n";
         elseif type(v) == "userdata" then
             str = str .. symbol .. k .. " =userdata,\n";
         elseif type(v) == "function" then

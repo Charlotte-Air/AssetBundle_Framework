@@ -64,6 +64,7 @@ public class UIManager : MonoBehaviour
             ui.transform.SetParent(parent, false);
             UI openui = ui.GetComponent<UI>();
             openui.OnOpen();
+            openui.CharacterInit();
             return;
         }
 
@@ -75,6 +76,7 @@ public class UIManager : MonoBehaviour
             baseUI.AssestName = uiPath;
             baseUI.Init(luaName);
             baseUI.OnOpen();
+            baseUI.CharacterInit();
         });
     }
 }

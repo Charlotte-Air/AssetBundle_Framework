@@ -9,6 +9,10 @@ public class HotUpdate : MonoBehaviour
 {
     private byte[] ReadPathFildListData;
     private byte[] ServerFileListData;
+    private int DownloadCount;
+    private GameObject Loadingobj;
+    private LoadingUI Loadingui;
+
     internal class DownFileInfo
     {
         public string url;
@@ -21,6 +25,11 @@ public class HotUpdate : MonoBehaviour
 
     void Start()
     {
+        GameObject go = Resources.Load<GameObject>("LoadingUI");
+        Loadingobj = Instantiate(go);
+        Loadingobj.transform.SetParent(this.transform);
+        Loadingui = Loadingobj.GetComponent<LoadingUI>();
+
         if (IsFirstInstall())
         {
             ReleaseResoures();
@@ -52,6 +61,7 @@ public class HotUpdate : MonoBehaviour
         ReadPathFildListData = file.fildData.data;
         List<DownFileInfo> fileInfos = GetFildList(file.fildData.text, PathUtil.ReadPath);  //解析文件信息
         StartCoroutine(DownLoadFild(fileInfos, OnReleaseFileActoin, OnReleaseAllFileActoin));  //下载多文件
+        Loadingui.InitProgress(100, "正在释放资源,~不消耗流量");
     }
 
     private void OnReleaseFileActoin(DownFileInfo file)
@@ -72,6 +82,7 @@ public class HotUpdate : MonoBehaviour
     #region 检测更新
     private void CheckUpdate()
     {
+        DownloadCount = 0;
         string url = Path.Combine(AppConst.ResouresUrl, AppConst.FileListName);
         DownFileInfo info = new DownFileInfo();
         info.url = url;
@@ -80,8 +91,9 @@ public class HotUpdate : MonoBehaviour
 
     private void OnDownLoadServerFileListActoin(DownFileInfo file)
     {
+        DownloadCount = 0;
         ServerFileListData = file.fildData.data;
-        List<DownFileInfo> fileInfos = GetFildList(file.fildData.text, AppConst.ResouresUrl);   //获取资源服务器文件信息
+        List<DownFileInfo> fileInfos = GetFildList(file.fildData.text, AppConst.ResouresUrl) ;   //获取资源服务器文件信息
         List<DownFileInfo> DownListFiles = new List<DownFileInfo>(); //下载文件集合
         for (int i = 0; i < fileInfos.Count; i++)
         {
@@ -94,7 +106,10 @@ public class HotUpdate : MonoBehaviour
         }
 
         if (DownListFiles.Count > 0)
+        {
             StartCoroutine(DownLoadFild(fileInfos, OnUpdateFileActoin, OnUpdateAllFileActoin));
+            Loadingui.InitProgress(DownListFiles.Count, "正在更新中......");
+        }
         else
             EnterGame();
     }
@@ -104,12 +119,15 @@ public class HotUpdate : MonoBehaviour
         Debug.Log("OnUpdateFileActoin->"+file.url);
         string writeFile = Path.Combine(PathUtil.ReadWritePath, file.fileName);
         FileUtil.WriteFile(writeFile, file.fildData.data);
+        DownloadCount++;
+        Loadingui.UpdateProgress(DownloadCount);
     }
 
     private void OnUpdateAllFileActoin()
     {
         FileUtil.WriteFile(Path.Combine(PathUtil.ReadWritePath, AppConst.FileListName), ServerFileListData);
         EnterGame();
+        Loadingui.InitProgress(0, "正在载入中......");
     }
 
     #endregion
@@ -117,27 +135,9 @@ public class HotUpdate : MonoBehaviour
 
     #region 进入游戏
     private void EnterGame()
-    {   //热更新测试
-        //Manager.Event.Subscribe(1, OnLuaInit);
-        //Manager.Lua.Init();
-    }
-
-    private void OnLuaInit(object args)
     {
-        Manager.Lua.StartLua("main");
-    }
-
-    private void OnApplicationQuit()
-    {
-        Manager.Event.UnSubscribe(1, OnLuaInit);
-    }
-
-    private void OnInstantiate(UnityEngine.Object obj)
-    {
-        GameObject go = Instantiate(obj) as GameObject;
-        go.transform.SetParent(this.transform);
-        go.SetActive(true);
-        go.transform.localPosition = Vector3.zero;
+        Manager.Event.PerformEvent((int) GameEvent.GameInit);
+        Destroy(Loadingobj);
     }
 
     #endregion
@@ -161,6 +161,8 @@ public class HotUpdate : MonoBehaviour
             yield break; 
 
         }
+        yield return new WaitForSeconds(0.2f);
+
         info.fildData = webRequest.downloadHandler;
         action?.Invoke(info);
         webRequest.Dispose(); //释放

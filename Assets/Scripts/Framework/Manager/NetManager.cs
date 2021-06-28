@@ -51,7 +51,7 @@ public class NetManager : MonoBehaviour
     /// </summary>
     /// <param name="post">地址</param>
     /// <param name="port">端口</param>
-    public void connectService(string post, int port)
+    public void ConnectService(string post, int port)
     {
         Client.OnConnectServer(post,port);
     }

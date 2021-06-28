@@ -1,11 +1,24 @@
-Vector3 = CS.UnityEngin.Vector3;
-
 function OnInit()
     print("Lua->PlayerEntity->OnInit")
+    local Close = self.transform:Find("Close"):GetComponent("Button")
+
+    Close:OnClickSet
+(
+    function ()
+        self:OnClose()
+    end
+)
+
 end
+
+
 
 function OnShow()
     print("Lua->PlayerEntity->OnShow")
+end
+
+function CharacterInit()
+    print("Lua->PlayerEntity->OnCharacterInit")
 end
 
 function Update()

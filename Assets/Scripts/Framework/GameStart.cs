@@ -9,18 +9,36 @@ using UnityEngine;
 
     void Start()
     {
-        Manager.Event.Subscribe(1, OnLuaInit);
+        Manager.Event.Subscribe((int)GameEvent.StartLua, StartLua);
+        Manager.Event.Subscribe((int)GameEvent.GameInit, GameInit);
         AppConst.gameMode = this.GameMode;
         AppConst.OpenLog = this.OpenLog;
         DontDestroyOnLoad(this);
-        Manager.Pool.CreateGameObjectPool("UI", 10);
-        Manager.Pool.CreateAssestPool("AssestBundle", 10);
-        Manager.Resourece.ParseVersionFile();
+
+        if (AppConst.gameMode == GameMode.UpdateMode)
+        {
+            this.gameObject.AddComponent<HotUpdate>();
+        }
+        else
+        {
+            Manager.Event.PerformEvent((int) GameEvent.GameInit);
+        }
+
+    }
+    
+    private void GameInit(object args)
+    {
+        if (AppConst.gameMode != GameMode.EditorMode)
+        {
+            Manager.Resourece.ParseVersionFile();
+        }
         Manager.Lua.Init();
     }
 
-    void OnLuaInit(object args)
+    private void StartLua(object args)
     {
+        Manager.Pool.CreateGameObjectPool("UI", 10);
+        Manager.Pool.CreateAssestPool("AssestBundle", 10);
         Manager.Lua.StartLua("main");
         XLua.LuaFunction func = Manager.Lua.LuaEnv.Global.Get<XLua.LuaFunction>("Test");
         func.Call();
@@ -28,7 +46,8 @@ using UnityEngine;
 
     void OnApplicationQuit()
     {
-        Manager.Event.UnSubscribe(1, OnLuaInit);
+        Manager.Event.UnSubscribe((int)GameEvent.StartLua, StartLua);
+        Manager.Event.UnSubscribe((int)GameEvent.GameInit, GameInit);
     }
 
 }
