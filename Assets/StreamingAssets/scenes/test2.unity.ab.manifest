@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1361242796
+CRC: 2563843705
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -41,5 +41,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/BuilResources/Scenes/Test2.unity
+- Assets/BuildResources/Scenes/Test2.unity
 Dependencies: []

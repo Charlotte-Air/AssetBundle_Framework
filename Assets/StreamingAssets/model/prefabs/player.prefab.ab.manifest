@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2945059403
+CRC: 1544344065
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -29,5 +29,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/BuilResources/Model/prefabs/Player.prefab
+- Assets/BuildResources/Model/prefabs/Player.prefab
 Dependencies: []

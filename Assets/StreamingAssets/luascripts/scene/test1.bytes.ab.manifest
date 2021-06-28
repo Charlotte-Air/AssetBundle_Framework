@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1177069539
+CRC: 2175539165
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -13,5 +13,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/BuilResources/LuaScripts/scene/Test1.bytes
+- Assets/BuildResources/LuaScripts/scene/Test1.bytes
 Dependencies: []

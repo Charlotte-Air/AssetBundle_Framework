@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1901462615
+CRC: 842799077
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -13,5 +13,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/BuilResources/LuaScripts/entity/PlayerEntity.bytes
+- Assets/BuildResources/LuaScripts/entity/PlayerEntity.bytes
 Dependencies: []

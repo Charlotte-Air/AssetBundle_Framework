@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1772552575
+CRC: 3266090193
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -13,5 +13,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/BuilResources/Audio/Music/Music_1.wav
+- Assets/BuildResources/Audio/Music/Music_1.wav
 Dependencies: []

@@ -9,7 +9,7 @@ public class PathUtil
     ///<summary>
     /// Build输入目录
     /// </summary>
-    public static readonly string BuildResourcesPath = AssetsPath + "/BuilResources/";
+    public static readonly string BuildResourcesPath = AssetsPath + "/BuildResources/";
     ///<summary>
     /// Build输出目录
     /// </summary>
@@ -38,7 +38,7 @@ public class PathUtil
     /// <summary>
     /// Lua目录路径
     /// </summary>
-    public static readonly string LuaPath = "Assets/BuilResources/LuaScripts";
+    public static readonly string LuaPath = "Assets/BuildResources/LuaScripts";
 
     /// <summary>
     /// 获取Unity相对路径
@@ -72,7 +72,7 @@ public class PathUtil
     /// </summary>
     public static string GetLuaPath(string name)
     {
-        return string.Format("Assets/BuilResources/LuaScripts/{0}.bytes", name);
+        return string.Format("Assets/BuildResources/LuaScripts/{0}.bytes", name);
     }
 
     ///<summary>
@@ -80,7 +80,7 @@ public class PathUtil
     /// </summary>
     public static string GetUIPath(string name)
     {
-        return string.Format("Assets/BuilResources/UI/prefabs/{0}.prefab", name);
+        return string.Format("Assets/BuildResources/UI/prefabs/{0}.prefab", name);
     }
 
     ///<summary>
@@ -88,7 +88,7 @@ public class PathUtil
     /// </summary>
     public static string GetScenePath(string name)
     {
-        return string.Format("Assets/BuilResources/Scenes/{0}.unity", name);
+        return string.Format("Assets/BuildResources/Scenes/{0}.unity", name);
     }
 
     ///<summary>
@@ -96,7 +96,7 @@ public class PathUtil
     /// </summary>
     public static string GetEffectPath(string name)
     {
-        return string.Format("Assets/BuilResources/Effect/prefabs/{0}.prefab}", name);
+        return string.Format("Assets/BuildResources/Effect/prefabs/{0}.prefab}", name);
     }
 
     ///<summary>
@@ -104,7 +104,7 @@ public class PathUtil
     /// </summary>
     public static string GetModelPath(string name)
     {
-        return string.Format("Assets/BuilResources/Model/prefabs/{0}.prefab",name);
+        return string.Format("Assets/BuildResources/Model/prefabs/{0}.prefab",name);
     }
 
     ///<summary>
@@ -112,7 +112,7 @@ public class PathUtil
     /// </summary>
     public static string GetMusicPath(string name)
     {
-        return string.Format("Assets/BuilResources/Audio/Music/{0}", name);
+        return string.Format("Assets/BuildResources/Audio/Music/{0}", name);
     }
 
     ///<summary>
@@ -120,7 +120,7 @@ public class PathUtil
     /// </summary>
     public static string GetSoundPath(string name)
     {
-        return string.Format("Assets/BuilResources/Audio/Sound/{0}", name);
+        return string.Format("Assets/BuildResources/Audio/Sound/{0}", name);
     }
 
     ///<summary>
@@ -128,7 +128,7 @@ public class PathUtil
     /// </summary>
     public static string GetSpritePath(string name)
     {
-        return string.Format("Assets/BuilResources/Sprite/{0}", name);
+        return string.Format("Assets/BuildResources/Sprite/{0}", name);
     }
 
 #endregion

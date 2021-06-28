@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3429936181
+CRC: 2850113430
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -23,6 +23,6 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/BuilResources/UI/prefabs/Login/Character.prefab
+- Assets/BuildResources/UI/prefabs/Login/Character.prefab
 Dependencies:
 - X:/@Air_XLuaFramework/Assets/StreamingAssets/ui/resources/character_1.png.ab

@@ -51,6 +51,7 @@ public class LuaManager : MonoBehaviour
     public void Init()
     {
         LuaEnv = new LuaEnv();
+        LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
         LuaEnv.AddLoader(Loader);
 
 #if UNITY_EDITOR //避免Build出错

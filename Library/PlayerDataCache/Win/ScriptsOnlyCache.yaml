@@ -7,7 +7,7 @@ ScriptsOnlyBuild:
     - UnityEditor.TestTools.TestRunner.TestListCacheData
     - UnityEditor.TestTools.TestRunner.TestRun.TestJobDataHolder
   sceneClasses:
-    Assets/BuilResources/Scenes/Test2.unity:
+    Assets/BuildResources/Scenes/Test2.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -41,5 +41,5 @@ ScriptsOnlyBuild:
   scriptHashData: []
   platform: 5
   scenePathNames:
-  - Assets/BuilResources/Scenes/Test2.unity
+  - Assets/BuildResources/Scenes/Test2.unity
   playerPath: X:/@Air_XLuaFramework/Assets/StreamingAssets/scenes/test2.unity.ab

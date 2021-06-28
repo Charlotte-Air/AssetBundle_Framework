@@ -26,6 +26,9 @@ public class Manager : MonoBehaviour
     private static ObjectPoolManager pool;
     public static ObjectPoolManager Pool { get { return pool; } set { pool = value; } }
 
+    private static NetManager net;
+    public static NetManager Net { get { return net; } set { net = value; } }
+
     private void Awake()
     {
         resource = this.gameObject.AddComponent<ResoureceManager>();
@@ -36,6 +39,7 @@ public class Manager : MonoBehaviour
         Sound = this.gameObject.AddComponent<SoundManager>();
         Event = this.gameObject.AddComponent<EventManager>();
         Pool = this.gameObject.AddComponent<ObjectPoolManager>();
+        Net = this.gameObject.AddComponent<NetManager>();
     }
 
 }
