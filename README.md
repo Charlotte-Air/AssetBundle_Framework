@@ -1,4 +1,4 @@
-# :smiley_cat: From Zero XLua  Practice project Demo~
+# :smiley_cat: From Zero XLua  Practice Project Demo~
 ## 😺Include~
 ⭐️`Bundle Tool~`</br>
 ⭐️`Bundle Assets`</br>
