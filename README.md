@@ -1,6 +1,5 @@
 # :smiley_cat: From Zero XLua  Practice Project ~
-## 😺Include~
-⭐️`Bundle Tool~`</br>
+⭐️`Bundle Tool`</br>
 ⭐️`Bundle Assets`</br>
 `Audio` - `Music` - `Sound` </br>
 `Effect` </br>
@@ -19,7 +18,7 @@
 处理Bundle依赖引用计数与释放AssetBundle资源  </br>
 加载资源的接口等...  </br>
 
-⭐️`模式的加载方式`  </br>
+⭐️`加载模式`  </br>
 EditorMode （在编译器模式下可以直接调用资源） </br>
 PackgeBundle </br>
 UpdateMode </br>
@@ -29,10 +28,11 @@ UpdateMode </br>
 -
 ⭐️ Update Process~</br>
 `HotUpdate脚本` UpdateMode模式下处理 `获取文件信息` -`检测更新` -`资源释放` -`进入游戏` 等... </br>
-`初次安装阶段`（本项目策略是判断filelist文件是否存在）</br>
-`整包模式`:只读目录热更资源拷贝到可读写目录,框架直接向可读写目录->(检查版本号或判断filelist文件是否存在)->如果没有从资源服务器下载 </br>
-`分包模式`:只读目录无热更资源，框架直接向可读写目录-> (检查版本号或判断filelist文件是否存在) ->如果没有从资源服务器下载</br>
+`初次安装阶段`（本项目策略是filelist文件解析信息是否一致与文件是否存在）</br>
+`整包模式`:只读目录热更资源拷贝到可读写目录，框架直接向可读写目录->(检查版本号与解析filelist文件信息或判断文件是否存在) ->如果没有从资源服务器下载 </br>
+`分包模式`:只读目录无热更资源，框架直接向可读写目录-> (检查版本号与解析filelist文件信息或判断文件是否存在) ->如果没有从资源服务器下载</br>
 `检查更新阶段`：下载服务器资源的filelist文件，对比文件信息与本地一至文件路径 </br>
+`其他路径`：`PathUtil` `AppConst`文件里定义路径目录和接口的获取
 `只读路径`: Application.streamingAssetsPath/XX/xxxx.ab </br>
 `可读写路径`: Application.persistentDataPath/XX/xxxx.ab </br>
 `资源服务器`: http://XXX.X.X.X/AssetBundles/XX/xxxx.ab </br>
@@ -44,6 +44,8 @@ UpdateMode </br>
 Lua通过（Mian）脚本进行管理 </br>
 C#通过LuaManager进行管理 与Lua调用进行接口设计 </br>
 只是简单的测试一些UI/Scene/Entity的交互~ 还在学习多多见谅~  </br>
+Lua与C# `Button`与`Silder`的监听
+
 ![](http://cdn.processon.com/60dc7b0ae0b34d238be07329?e=1625065754&token=trhI0BY8QfVrIGn9nENop6JAc6l5nZuxhjQ62UfM:XPmifvIIC42EydEyPpVE6fzcwKY=) </br>
 
 #### 😺`Manager` 
