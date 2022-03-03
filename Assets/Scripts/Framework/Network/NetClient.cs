@@ -1,31 +1,17 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Sockets;
 using UnityEngine;
+using System.Net.Sockets;
 
 public class NetClient
 {
-    private TcpClient Client;
-    /// <summary>
-    /// 网络流
-    /// </summary>
-    private NetworkStream Tcpstream;
-    /// <summary>
-    /// 内存流
-    /// </summary>
-    private MemoryStream MemStream;
-    /// <summary>
-    /// 缓存大小
-    /// </summary>
-    private const int BufferSize = 1024 * 64;
-    /// <summary>
-    /// 缓冲区
-    /// </summary>
-    private byte[] Buffer = new byte[BufferSize];
-    private BinaryReader BinaryReader;
+    TcpClient Client;
+    NetworkStream Tcpstream; //网络流
+    MemoryStream MemStream;  //内存流
+    BinaryReader BinaryReader;
+    const int BufferSize = 1024 * 64; //缓存大小
+    byte[] Buffer = new byte[BufferSize]; //缓冲区
 
     public NetClient()
     {
@@ -48,7 +34,6 @@ public class NetClient
                 Debug.LogError("Host invalid");
                 return;
             }
-
             if (addresses[0].AddressFamily == AddressFamily.InterNetworkV6)
             {
                 Client = new TcpClient(AddressFamily.InterNetworkV6);
@@ -71,7 +56,7 @@ public class NetClient
     /// <summary>
     /// 断开连接
     /// </summary>
-    private void OnDisConnected()
+    void OnDisConnected()
     {
         if (Client != null && Client.Connected)
         {
@@ -87,7 +72,7 @@ public class NetClient
     /// 连接服务器回调
     /// </summary>
     /// <param name="asyncResult"></param>
-    private void OnConnect(IAsyncResult asyncResult)
+    void OnConnect(IAsyncResult asyncResult)
     {
         if (Client == null || !Client.Connected)
         {
@@ -103,7 +88,7 @@ public class NetClient
     /// 读取
     /// </summary>
     /// <param name="asyncResult"></param>
-    private void OnRead(IAsyncResult asyncResult)
+    void OnRead(IAsyncResult asyncResult)
     {
         try
         {
@@ -116,7 +101,6 @@ public class NetClient
                 OnDisConnected();
                 return;
             }
-
             ReceiveData();
             lock (Tcpstream)
             {
@@ -134,7 +118,7 @@ public class NetClient
     /// <summary>
     /// 解析数据
     /// </summary>
-    private void ReceiveData()
+    void ReceiveData()
     {
         MemStream.Seek(0, SeekOrigin.End);  //设置内存时钟为末尾
         MemStream.Write(Buffer,0,Buffer.Length); //收到的数据
@@ -163,10 +147,7 @@ public class NetClient
     /// <summary>
     /// 剩余字节数
     /// </summary>
-    private int RemainingBytesLength()
-    {
-        return (int) (MemStream.Length - MemStream.Position);
-    }
+    int RemainingBytesLength() => (int) (MemStream.Length - MemStream.Position);
 
     /// <summary>
     /// 发送消息
@@ -200,7 +181,7 @@ public class NetClient
     /// 发送消息回调
     /// </summary>
     /// <param name="arResult"></param>
-    private void OnEndSend(IAsyncResult  arResult)
+    void OnEndSend(IAsyncResult  arResult)
     {
         try
         {

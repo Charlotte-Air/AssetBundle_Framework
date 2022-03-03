@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using XLua;
 using System.IO;
 using UnityEngine;
-using XLua;
+using System.Collections.Generic;
 
 public class LuaManager : MonoBehaviour
 {

@@ -7,42 +7,18 @@ public class Entity : LuaBehaviour
 {
     private Action LuaOnShow;
     private Action LuaOnHide;
-
-    /// <summary>
-    /// 初始化
-    /// </summary>
-    /// <param name="luaName">Lua脚本名</param>
-    public override void Init(string luaName)
+    public override void Init(string luaName) //脚本名
     {
         base.Init(luaName);
         ScriptEvn.Get("OnShow", out LuaOnShow);
         ScriptEvn.Get("OnHide", out LuaOnHide);
     }
-
-    /// <summary>
-    /// 显示
-    /// </summary>
-    public void OnShow()
+    public void OnShow() => LuaOnShow?.Invoke();
+    public void OnHide() => LuaOnHide?.Invoke();
+    protected override void Clear() //释放
     {
-        LuaOnShow?.Invoke();
-    }
-
-    /// <summary>
-    /// 隐藏
-    /// </summary>
-    public void OnHide()
-    {
-        LuaOnHide?.Invoke();
-    }
-
-    /// <summary>
-    /// 清空
-    /// </summary>
-    protected override void Clear()
-    {   //释放
-        base.Clear();
+        base.Clear();   
         LuaOnShow = null;
         LuaOnHide = null;
     }
-
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
@@ -15,10 +13,7 @@ public class SoundManager : MonoBehaviour
             PlayerPrefs.SetFloat("MusuicVolume", value);
         }
     }
-    public void SetMusicVolume(float value)
-    {
-        this.MusuicVolume = value;
-    }
+    public void SetMusicVolume(float value) => this.MusuicVolume = value;
 
     private AudioSource SoundAudio;
     private float SoundVolume
@@ -30,12 +25,8 @@ public class SoundManager : MonoBehaviour
             PlayerPrefs.SetFloat("SoundVolume", value);
         }
     }
-    public void SetSoundVolume(float value)
-    {
-        this.SoundVolume = value;
-    }
- 
-
+    public void SetSoundVolume(float value) => this.SoundVolume = value;
+    
     void Awake()
     {
         MusuicAudio = this.gameObject.AddComponent<AudioSource>();
@@ -65,7 +56,6 @@ public class SoundManager : MonoBehaviour
             MusuicAudio.Play();
             return;
         }
-        
         Manager.Resourece.LoadMusic(name, (UnityEngine.Object obj) =>
         {
             MusuicAudio.clip = obj as AudioClip;
@@ -76,26 +66,17 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// 暂停音乐
     /// </summary>
-    public void PauseMusic()
-    {
-        MusuicAudio.Pause();
-    }
+    public void PauseMusic() => MusuicAudio.Pause();
 
     /// <summary>
     /// 恢复音乐
     /// </summary>
-    public void OnUnPauseMusic()
-    {
-        MusuicAudio.UnPause();
-    }
+    public void OnUnPauseMusic() => MusuicAudio.UnPause();
 
     /// <summary>
     /// 停止音乐
     /// </summary>
-    public void StopMusic()
-    {
-        MusuicAudio.Stop();
-    }
+    public void StopMusic() => MusuicAudio.Stop();
 
     /// <summary>
     /// 播放音效

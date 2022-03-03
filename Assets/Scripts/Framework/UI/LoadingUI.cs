@@ -1,24 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class LoadingUI : MonoBehaviour
 {
+    float Max;
     [SerializeField]
     Image progressValue;
-
     [SerializeField]
     GameObject progressBar;
-
     [SerializeField]
     Text progressDesc;
-
     [SerializeField]
     Text progressText;
-
-    private float Max;
-
+    
     public void InitProgress(float max, string desc)
     {
         Max = max;

@@ -1,18 +1,11 @@
-﻿using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class EntityManager : MonoBehaviour
 {
-    /// <summary>
-    /// 缓存集合
-    /// </summary>
-    private Dictionary<string, GameObject> Entitys = new Dictionary<string, GameObject>();
-    /// <summary>
-    /// 分组集合
-    /// </summary>
-    private Dictionary<string, Transform> Groups = new Dictionary<string, Transform>();
-    private Transform EntityParent;
+    Transform EntityParent;
+    Dictionary<string, GameObject> Entitys = new Dictionary<string, GameObject>(); //缓存集合
+    Dictionary<string, Transform> Groups = new Dictionary<string, Transform>(); //分组集合
 
     void Awake()
     {
@@ -60,7 +53,6 @@ public class EntityManager : MonoBehaviour
             logic.OnShow();
             return;
         }
-
         Manager.Resourece.LoadPrefab(Name, (UnityEngine.Object obj) =>
         {
             entity = Instantiate(obj) as GameObject;

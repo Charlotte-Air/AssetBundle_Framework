@@ -1,16 +1,9 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
+using System.Collections.Generic;
 public class ObjectPoolManager : MonoBehaviour
 {
-    /// <summary>
-    /// 父节点
-    /// </summary>
-    private Transform PoolParent;
-    /// <summary>
-    /// 对象池结合
-    /// </summary>
-    private Dictionary<string, ObjectBase> Pools = new Dictionary<string, ObjectBase>();
+    Transform PoolParent; //父节点
+    Dictionary<string, ObjectBase> Pools = new Dictionary<string, ObjectBase>(); //对象池
 
     void Awake()
     {
@@ -23,8 +16,7 @@ public class ObjectPoolManager : MonoBehaviour
     /// <typeparam name="T">类型</typeparam>
     /// <param name="PoolName">对象池名</param>
     /// <param name="releaseTime">释放时间</param>
-    private void CreatePool<T>(string PoolName, float releaseTime)
-        where T : ObjectBase
+    private void CreatePool<T>(string PoolName, float releaseTime) where T : ObjectBase
     {
         if (!this.Pools.TryGetValue(name, out ObjectBase pool))
         {
@@ -35,29 +27,21 @@ public class ObjectPoolManager : MonoBehaviour
             this.Pools.Add(PoolName, pool);
         }
     }
-
-
-    #region 接口
-
+    
+    #region 公共接口
     /// <summary>
     /// 创建物体对象池
     /// </summary>
     /// <param name="poolName">对象池名称</param>
     /// <param name="releaseTime">释放时间</param>
-    public void CreateGameObjectPool(string poolName, float releaseTime)
-    {
-        this.CreatePool<ObjectPool>(poolName, releaseTime);
-    }
+    public void CreateGameObjectPool(string poolName, float releaseTime) => CreatePool<ObjectPool>(poolName, releaseTime);
 
     /// <summary>
     /// 创建资源对象池
     /// </summary>
     /// <param name="poolName">对象池名称</param>
     /// <param name="releaseTime">释放时间</param>
-    public void CreateAssestPool(string poolName, float releaseTime)
-    {
-        this.CreatePool<AssestPool>(poolName, releaseTime);
-    }
+    public void CreateAssestPool(string poolName, float releaseTime) => CreatePool<AssestPool>(poolName, releaseTime);
 
     /// <summary>
     /// 取出对象
@@ -88,5 +72,4 @@ public class ObjectPoolManager : MonoBehaviour
         }
     }
     #endregion
-
 }

@@ -1,32 +1,29 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEditor;
-using UObject = UnityEngine.Object;
+using System.Collections;
+using System.Collections.Generic;
 
 public class ResoureceManager : MonoBehaviour
 {
-    /// <summary>
-    /// Bundle信息集合
-    /// </summary>
-    private Dictionary<string, BundleInfo> BundleInfos = new Dictionary<string, BundleInfo>();
-    /// <summary>
-    /// AssetBundle集合
-    /// </summary>
-    private Dictionary<string, BundlData> assetBundles = new Dictionary<string, BundlData>();
+    Dictionary<string, BundleInfo> BundleInfos = new Dictionary<string, BundleInfo>();
+    Dictionary<string, BundlData> assetBundles = new Dictionary<string, BundlData>();
     internal class BundleInfo
     {
         public string AssetsName;
         public string BundleName;
         public List<string> Dependences;
     }
+    
     internal class BundlData
     {
         public AssetBundle Bundle;
         public int Count; //引用计数
-        public BundlData(AssetBundle ab) {  Bundle = ab ; Count = 1;  }
+        public BundlData(AssetBundle ab)
+        {
+            Bundle = ab;
+            Count = 1;
+        }
     }
 
     /// <summary>
@@ -61,7 +58,7 @@ public class ResoureceManager : MonoBehaviour
     /// </summary>
     /// <param name="assetsName">资源名</param>
     /// <param name="action">回调</param>
-    IEnumerator LoadBundleAsync(string assetsName,Action<UObject> action = null)
+    IEnumerator LoadBundleAsync(string assetsName,Action<UnityEngine.Object> action = null)
     {
         if (!BundleInfos.ContainsKey(assetsName))
         {
@@ -75,7 +72,7 @@ public class ResoureceManager : MonoBehaviour
         BundlData bundle = GetBundle(bundleName);
         if (bundle == null)
         {
-            UObject obj = Manager.Pool.TakeObject("AssestBundle", bundleName); //取对象池Bundle
+            UnityEngine.Object obj = Manager.Pool.TakeObject("AssestBundle", bundleName); //取对象池Bundle
             if (obj != null)
             {
                 AssetBundle ab = obj as AssetBundle;
@@ -142,15 +139,21 @@ public class ResoureceManager : MonoBehaviour
         List<string> dependences = BundleInfos[assetsName].Dependences;
         if (dependences != null)
         {
-            foreach (string key in dependences)
+            var en = dependences.GetEnumerator();
+            while (en.MoveNext())
             {
-                string name = BundleInfos[key].BundleName;
+                string name = BundleInfos[en.Current].BundleName;
                 MinusOneBundleCount(name);
             }
+            // foreach (string key in dependences)
+            // {
+            //     string name = BundleInfos[key].BundleName;
+            //     MinusOneBundleCount(name);
+            // }
         }
     }
 
-    private void MinusOneBundleCount(string bundleName)
+    void MinusOneBundleCount(string bundleName)
     {
         if(assetBundles.TryGetValue(bundleName,out BundlData bundldata))
         {
@@ -174,13 +177,14 @@ public class ResoureceManager : MonoBehaviour
     /// </summary>
     /// <param name="assestName">资源名</param>
     /// <param name="action"></param>
-    public void EditorLoadAssest(string assestName, Action<UObject> action = null)
+    void EditorLoadAssest(string assestName, Action<UnityEngine.Object> action = null)
     {
         Debug.Log("->EditorLoadAssest");
-        UObject obj = UnityEditor.AssetDatabase.LoadAssetAtPath(assestName, typeof(UObject));
-        if (obj == null)
+        UnityEngine.Object obj = UnityEditor.AssetDatabase.LoadAssetAtPath(assestName, typeof(UnityEngine.Object));
+        if (obj != null)
+            action?.Invoke(obj);
+        else
             Debug.LogError("Assest Name is Not Exist:" + assestName);
-        action?.Invoke(obj); //回调
     }
 #endif
 
@@ -190,7 +194,7 @@ public class ResoureceManager : MonoBehaviour
     /// </summary>
     /// <param name="assestName">资源名</param>
     /// <param name="action">回调</param>
-    private void LoadAssest(string assestName, Action<UObject> action)
+    void LoadAssest(string assestName, Action<UnityEngine.Object> action)
     {
 #if UNITY_EDITOR //避免Build出错
         if (AppConst.gameMode == GameMode.EditorMode)
@@ -204,7 +208,7 @@ public class ResoureceManager : MonoBehaviour
     /// 释放资源
     /// </summary>
     /// <param name="name">资源名</param>
-    public void ReleaseBundle(UObject obj)
+    public void ReleaseBundle(UnityEngine.Object obj)
     {
         AssetBundle ab =  obj as AssetBundle;
         ab.Unload(true);

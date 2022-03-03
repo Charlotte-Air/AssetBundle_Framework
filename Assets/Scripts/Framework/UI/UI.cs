@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class UI : LuaBehaviour
 {
-    private Action LuaOnOpen;
-    private Action LuaOnClose;
-    private Action LuaCharacterInit;
+    Action LuaOnOpen;
+    Action LuaOnClose;
+    Action LuaCharacterInit;
     public string AssestName;
 
     /// <summary>
@@ -18,27 +18,15 @@ public class UI : LuaBehaviour
         ScriptEvn.Get("OnOpen", out LuaOnOpen);
         ScriptEvn.Get("OnClose", out LuaOnClose);
     }
-
-    /// <summary>
-    /// 打开
-    /// </summary>
-    public void OnOpen()
-    {
-        LuaOnOpen?.Invoke();
-    }
-
-    /// <summary>
-    /// 关闭
-    /// </summary>
+    
+    public void OnOpen() => LuaOnOpen?.Invoke();
+    
     public void OnClose()
     {
         LuaOnClose?.Invoke();
         Manager.Pool.RecycleObject("UI", AssestName, this.gameObject);
     }
-
-    /// <summary>
-    /// 清空
-    /// </summary>
+    
     protected override void Clear()
     {   //释放
         base.Clear();

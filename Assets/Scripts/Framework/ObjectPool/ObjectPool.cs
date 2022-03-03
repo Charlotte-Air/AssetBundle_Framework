@@ -9,7 +9,6 @@ public class ObjectPool : ObjectBase
         {
             return null;
         }
-
         GameObject go =obj as GameObject;
         go.SetActive(true);
         return obj;

@@ -1,41 +1,39 @@
-﻿  using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
  public class GameStart : MonoBehaviour
 {
-    public GameMode GameMode;
     public bool OpenLog;
-
+    public GameMode GameMode = GameMode.Default;
+    
     void Start()
     {
         Manager.Event.Subscribe((int)GameEvent.StartLua, StartLua);
         Manager.Event.Subscribe((int)GameEvent.GameInit, GameInit);
+        if (GameMode == GameMode.Default)
+        {
+#if UNITY_EDITOR
+            GameMode = GameMode.UpdateMode;
+#elif !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IPHONE)
+            GameMode = GameMode.UpdateMode;
+#endif
+        }
         AppConst.gameMode = this.GameMode;
         AppConst.OpenLog = this.OpenLog;
         DontDestroyOnLoad(this);
-
         if (AppConst.gameMode == GameMode.UpdateMode)
-        {
             this.gameObject.AddComponent<HotUpdate>();
-        }
         else
-        {
             Manager.Event.PerformEvent((int) GameEvent.GameInit);
-        }
-
     }
     
-    private void GameInit(object args)
+    void GameInit(object args)
     {
         if (AppConst.gameMode != GameMode.EditorMode)
-        {
             Manager.Resourece.ParseVersionFile();
-        }
         Manager.Lua.Init();
     }
 
-    private void StartLua(object args)
+    void StartLua(object args)
     {
         Manager.Pool.CreateGameObjectPool("UI", 10);
         Manager.Pool.CreateAssestPool("AssestBundle", 10);
@@ -49,5 +47,4 @@ using UnityEngine;
         Manager.Event.UnSubscribe((int)GameEvent.StartLua, StartLua);
         Manager.Event.UnSubscribe((int)GameEvent.GameInit, GameInit);
     }
-
 }
