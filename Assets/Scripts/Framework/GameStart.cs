@@ -3,12 +3,24 @@
  public class GameStart : MonoBehaviour
 {
     public bool OpenLog;
+<<<<<<< HEAD
     public GameMode GameMode;
+=======
+    public GameMode GameMode = GameMode.Default;
+>>>>>>> 02a2b943112880eea05a74e017239d1b82d3cda6
     
     void Start()
     {
         Manager.Event.Subscribe((int)GameEvent.StartLua, StartLua);
         Manager.Event.Subscribe((int)GameEvent.GameInit, GameInit);
+        if (GameMode == GameMode.Default)
+        {
+#if UNITY_EDITOR
+            GameMode = GameMode.UpdateMode;
+#elif !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IPHONE)
+            GameMode = GameMode.UpdateMode;
+#endif
+        }
         AppConst.gameMode = this.GameMode;
         AppConst.OpenLog = this.OpenLog;
         DontDestroyOnLoad(this);
