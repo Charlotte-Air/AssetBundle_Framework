@@ -29,7 +29,7 @@ public class Manager : MonoBehaviour
     private static NetManager net;
     public static NetManager Net { get { return net; } set { net = value; } }
 
-    private void Awake()
+    void Awake()
     {
         resource = this.gameObject.AddComponent<ResoureceManager>();
         lua = this.gameObject.AddComponent<LuaManager>();
@@ -41,5 +41,4 @@ public class Manager : MonoBehaviour
         Pool = this.gameObject.AddComponent<ObjectPoolManager>();
         Net = this.gameObject.AddComponent<NetManager>();
     }
-
 }

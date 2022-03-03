@@ -1,15 +1,11 @@
-﻿using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class NetManager : MonoBehaviour
 {
-    private NetClient Client;
-    /// <summary>
-    /// 消息队列集合
-    /// </summary>
-    private Queue<KeyValuePair<int, string>> Messages = new Queue<KeyValuePair<int, string>>();
-    private XLua.LuaFunction ReceiveMessage;
+    NetClient Client;
+    XLua.LuaFunction ReceiveMessage;
+    Queue<KeyValuePair<int, string>> Messages = new Queue<KeyValuePair<int, string>>(); //消息队列集合
 
     public void Init()
     {

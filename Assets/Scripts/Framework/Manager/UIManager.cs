@@ -1,26 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class UIManager : MonoBehaviour
 {
-    /// <summary>
-    /// 缓存UI集合
-    /// </summary>
-    private Dictionary<string, GameObject> UIs = new Dictionary<string, GameObject>();
-    /// <summary>
-    /// UI分组集合
-    /// </summary>
-    private Dictionary<string, Transform> UIGroups = new Dictionary<string, Transform>();
-    private Transform ui_Transform;
-
+    Transform ui_Transform;
+    Dictionary<string, GameObject> UIs = new Dictionary<string, GameObject>(); //缓存UI集合
+    Dictionary<string, Transform> UIGroups = new Dictionary<string, Transform>(); //UI层级集合
+    
     void Awake()
     {
         ui_Transform = this.transform.parent.Find("UI");
     }
 
     /// <summary>
-    /// 设置UI分组
+    /// 设置UI层级
     /// </summary>
     /// <param name="group"></param>
     public void SetGroup(List<string> group)

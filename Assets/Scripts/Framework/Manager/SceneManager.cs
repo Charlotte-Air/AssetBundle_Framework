@@ -1,8 +1,6 @@
-﻿using System;
+﻿using UnityEngine;
 using System.Collections;
-using UnityEngine;
 using UnityEngine.SceneManagement;
-
 public class SceneManager : MonoBehaviour
 {
     private string Name = "[Scene]";
@@ -20,8 +18,9 @@ public class SceneManager : MonoBehaviour
     private void OnActiveSceneChanged(UnityEngine.SceneManagement.Scene s1, UnityEngine.SceneManagement.Scene s2)
     {
         if (!s1.isLoaded || !s2.isLoaded)
+        {
             return;
-
+        }
         Scene se1 = GetScene(s1);
         Scene se2 = GetScene(s2);
         se1?.OnInActive();
@@ -103,8 +102,10 @@ public class SceneManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator StartLoadScene(string sceneName, string luaName, LoadSceneMode mode)
     {
-        if(IsLoadedScene(sceneName))
+        if (IsLoadedScene(sceneName))
+        {
             yield break;
+        }
 
         AsyncOperation async = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, mode);
         async.allowSceneActivation = true; //自动跳转场景
@@ -115,7 +116,6 @@ public class SceneManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(go,scene); //移动场景
         
         Scene se = go.AddComponent<Scene>();
-        se.SceneName = sceneName;
         se.Init(luaName);
         se.OnEnter();
     }
@@ -125,10 +125,7 @@ public class SceneManager : MonoBehaviour
     /// 卸载场景
     /// </summary>
     /// <param name="sceneName">场景名</param>
-    public void UnLoadSceneAsync(string sceneName)
-    {
-        StartCoroutine(UnLoadScene(sceneName));
-    }
+    public void UnLoadSceneAsync(string sceneName) => StartCoroutine(UnLoadScene(sceneName));
 
     /// <summary>
     /// 异步卸载场景

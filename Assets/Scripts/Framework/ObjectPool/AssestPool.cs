@@ -2,16 +2,8 @@
 
 public class AssestPool : ObjectBase
 {
-    public override Object Take(string name)
-    {
-        return base.Take(name);
-    }
-
-    public override void Recycle(string name, Object obj)
-    {
-        base.Recycle(name, obj);
-    }
-
+    public override Object Take(string name) => base.Take(name);
+    public override void Recycle(string name, Object obj) => base.Recycle(name, obj);
     public override void Release()
     {
         base.Release();

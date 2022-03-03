@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 
 [XLua.LuaCallCSharp]
 public static class UnityExit
@@ -33,5 +32,4 @@ public static class UnityExit
             func?.Call(value);
         });
     }
-
 }

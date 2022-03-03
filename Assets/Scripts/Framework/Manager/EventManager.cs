@@ -1,6 +1,5 @@
-﻿using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
@@ -23,13 +22,9 @@ public class EventManager : MonoBehaviour
     public void Subscribe(int id, EnventHandler envent)
     {
         if (envents.ContainsKey(id))
-        {
             envents[id] += envent;
-        }
         else
-        {
             envents.Add(id,envent);
-        }
     }
 
     /// <summary>
@@ -41,15 +36,10 @@ public class EventManager : MonoBehaviour
     {
         if (envents.ContainsKey(id))
         {
-            if (envents[id] != null)
-            {
-                envents[id] -= envent;
-            }
-
             if (envents[id] == null)
-            {
                 envents.Remove(id);
-            }
+            else
+                envents[id] -= envent;
         }
     }
     

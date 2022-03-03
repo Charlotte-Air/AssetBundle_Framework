@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PathUtil
+public static class PathUtil
 {
     ///<summary>
     /// Assets根目录
@@ -26,7 +26,7 @@ public class PathUtil
             return ReadPath;
         }
     }
-
+    
     /// <summary>
     /// 只读目录
     /// </summary>
@@ -65,73 +65,47 @@ public class PathUtil
     }
 
 
-    #region 获取资源接口
-
+    #region 资源接口
+    
     ///<summary>
     /// 获取Lua路径
     /// </summary>
-    public static string GetLuaPath(string name)
-    {
-        return string.Format("Assets/BuildResources/LuaScripts/{0}.bytes", name);
-    }
+    public static string GetLuaPath(string name) => $"Assets/BuildResources/LuaScripts/{name}.bytes";
 
     ///<summary>
     /// 获取UI路径
     /// </summary>
-    public static string GetUIPath(string name)
-    {
-        return string.Format("Assets/BuildResources/UI/prefabs/{0}.prefab", name);
-    }
+    public static string GetUIPath(string name) => $"Assets/BuildResources/UI/prefabs/{name}.prefab";
 
     ///<summary>
     /// 获取场景路径
     /// </summary>
-    public static string GetScenePath(string name)
-    {
-        return string.Format("Assets/BuildResources/Scenes/{0}.unity", name);
-    }
+    public static string GetScenePath(string name) => $"Assets/BuildResources/Scenes/{name}.unity";
 
     ///<summary>
     /// 获取特效路径
     /// </summary>
-    public static string GetEffectPath(string name)
-    {
-        return string.Format("Assets/BuildResources/Effect/prefabs/{0}.prefab}", name);
-    }
+    public static string GetEffectPath(string name) => $"Assets/BuildResources/Effect/prefabs/{name}.prefab";
 
     ///<summary>
     /// 获取模型路径
     /// </summary>
-    public static string GetModelPath(string name)
-    {
-        return string.Format("Assets/BuildResources/Model/prefabs/{0}.prefab",name);
-    }
+    public static string GetModelPath(string name) => $"Assets/BuildResources/Model/prefabs/{name}.prefab";
 
     ///<summary>
     /// 获取音乐路径
     /// </summary>
-    public static string GetMusicPath(string name)
-    {
-        return string.Format("Assets/BuildResources/Audio/Music/{0}", name);
-    }
+    public static string GetMusicPath(string name) => $"Assets/BuildResources/Audio/Music/{name}";
 
     ///<summary>
     /// 获取音效路径
     /// </summary>
-    public static string GetSoundPath(string name)
-    {
-        return string.Format("Assets/BuildResources/Audio/Sound/{0}", name);
-    }
+    public static string GetSoundPath(string name) => $"Assets/BuildResources/Audio/Sound/{name}";
 
     ///<summary>
     /// 获取贴图路径
     /// </summary>
-    public static string GetSpritePath(string name)
-    {
-        return string.Format("Assets/BuildResources/Sprite/{0}", name);
-    }
+    public static string GetSpritePath(string name) => $"Assets/BuildResources/Sprite/{name}";
 
-#endregion
-
-
+    #endregion
 }
