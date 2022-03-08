@@ -1,15 +1,20 @@
-﻿using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
+
 public class UIManager : MonoBehaviour
 {
     Transform ui_Transform;
-    Dictionary<string, GameObject> UIs = new Dictionary<string, GameObject>(); //缓存UI集合
-    Dictionary<string, Transform> UIGroups = new Dictionary<string, Transform>(); //UI层级集合
-    
+    Dictionary<string, Transform> UIGroups;
+
     void Awake()
     {
         ui_Transform = this.transform.parent.Find("UI");
+        Init();
+    }
+
+    void Init()
+    {
+        UIGroups = new Dictionary<string, Transform>();
     }
 
     /// <summary>
@@ -20,7 +25,7 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < group.Count; i++)
         {
-            GameObject go = new GameObject("Group-" + group[i]);
+            GameObject go = new GameObject("Group - " + group[i]);
             go.transform.SetParent(ui_Transform, false);
             UIGroups.Add(group[i], go.transform);
         }
@@ -34,7 +39,7 @@ public class UIManager : MonoBehaviour
     Transform GetGroup(string group)
     {
         if (!UIGroups.ContainsKey(group))
-            Debug.LogError("Group is Not Exist");
+            Debug.LogError(group + "GetGroup Exception!!!");
         return UIGroups[group];
     }
 
@@ -49,7 +54,7 @@ public class UIManager : MonoBehaviour
         GameObject ui = null;
         Transform parent = GetGroup(group);
         string uiPath= PathUtil.GetUIPath(uiName);
-        Object uiObj = Manager.Pool.TakeObject("UI", uiPath);
+        Object uiObj = GameManager.Instance.GetManager<ObjectPoolManager>(GameManager.ManagerName.Pool).TakeObject(PoolType.UI,uiPath);
 
         if (uiObj != null)
         {
@@ -61,7 +66,7 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        Manager.Resourece.LoadUI(uiName, (Object obj) =>
+        GameManager.Instance.GetManager<ResoureceManager>(GameManager.ManagerName.Resourece).LoadUI(uiName, (Object obj) =>
         {
             ui =Instantiate(obj) as GameObject;
             ui.transform.SetParent(parent, false);

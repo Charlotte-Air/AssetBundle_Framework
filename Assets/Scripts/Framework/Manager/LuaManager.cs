@@ -5,27 +5,9 @@ using System.Collections.Generic;
 
 public class LuaManager : MonoBehaviour
 {
-    /// <summary>
-    ///  Lua文件名列表
-    /// </summary>
-    public List<string> LuaNames = new List<string>();
-    /// <summary>
-    /// 缓存Lua脚本集合
-    /// </summary>
-    public Dictionary<string, byte[]> LuaScripts = new Dictionary<string, byte[]>();
-    /// <summary>
-    /// Lua虚拟机
-    /// </summary>
-    public LuaEnv LuaEnv;
-    /// <summary>
-    ///  Lua加载器
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    byte[] Loader(ref string name)
-    {
-        return GetLuaScripts(name);
-    }
+    public LuaEnv LuaEnv; //Lua虚拟机
+    List<string> LuaNames = new List<string>(); //Lua文件名列表
+    Dictionary<string, byte[]> LuaScripts = new Dictionary<string, byte[]>(); //缓存Lua脚本集合
 
     void Update()
     {
@@ -52,15 +34,16 @@ public class LuaManager : MonoBehaviour
         LuaEnv = new LuaEnv();
         LuaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
         LuaEnv.AddLoader(Loader);
-
 #if UNITY_EDITOR //避免Build出错
-        if (AppConst.gameMode == GameMode.EditorMode)
+        if (AppConst.gameMode == AppConst.GameMode.EditorMode)
             EditorLoadLuaScripts();
 #endif
-        if (AppConst.gameMode != GameMode.EditorMode)
+        if (AppConst.gameMode != AppConst.GameMode.EditorMode)
             LoadLuaScripts();
     }
 
+    byte[] Loader(ref string name) => GetLuaScripts(name);
+    
     /// <summary>
     /// 添加Lua脚本
     /// </summary>
@@ -72,7 +55,7 @@ public class LuaManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 获取Lua脚本
+    /// 获取Lua脚本z
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
@@ -93,12 +76,12 @@ public class LuaManager : MonoBehaviour
     {
         foreach (string name in LuaNames)
         {
-            Manager.Resourece.LoadLua(name, (UnityEngine.Object obj) =>
+            GameManager.Instance.GetManager<ResoureceManager>(GameManager.ManagerName.Resourece).LoadLua(name, (UnityEngine.Object obj) =>
             {
                 AddLuaScripts(name, (obj as TextAsset).bytes);
                 if (LuaScripts.Count >= LuaNames.Count)
-                {   //所有Lua加载完成时
-                    Manager.Event.PerformEvent(10001);
+                {
+                    GameManager.Instance.GetManager<MessageManager>(GameManager.ManagerName.Message).NotifyMessage(MessageType.StartLua);//所有Lua加载完成时
                     LuaNames.Clear();
                     LuaNames = null;
                 }
@@ -115,6 +98,13 @@ public class LuaManager : MonoBehaviour
         LuaEnv.DoString(string.Format("require '{0}'", name));
     }
 
+    public void TestLua(string name)
+    {
+        Debug.Log($"测试{name}");
+    }
+
+    public void AddLuaScript(string file) => LuaNames.Add(file);
+
 #if UNITY_EDITOR
     /// <summary>
     /// 编译器模式加载Lua脚本
@@ -128,10 +118,9 @@ public class LuaManager : MonoBehaviour
             byte[] file = File.ReadAllBytes(fileName);
             AddLuaScripts(PathUtil.GetUnityPath(fileName), file);
         }
-        Manager.Event.PerformEvent(10001);
+        GameManager.Instance.GetManager<MessageManager>(GameManager.ManagerName.Message).NotifyMessage(MessageType.StartLua);
     }
 #endif
-
 }
 
 

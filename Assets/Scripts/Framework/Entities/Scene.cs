@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 public class Scene : LuaBehaviour
 {
     Action LuaActive;
@@ -19,7 +18,7 @@ public class Scene : LuaBehaviour
     public void OnEnter() => LuaOnEnter?.Invoke();
     public void OnQuit() => LuaOnQuit?.Invoke();
     protected override void Clear()
-    {   //释放
+    {
         base.Clear();
         LuaActive = null;
         LuaInActive = null;

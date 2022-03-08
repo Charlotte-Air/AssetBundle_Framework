@@ -5,12 +5,13 @@ public class NetManager : MonoBehaviour
 {
     NetClient Client;
     XLua.LuaFunction ReceiveMessage;
-    Queue<KeyValuePair<int, string>> Messages = new Queue<KeyValuePair<int, string>>(); //消息队列集合
+    Queue<KeyValuePair<int, string>> Messages; //消息队列集合
 
     public void Init()
     {
         Client = new NetClient();
-        ReceiveMessage = Manager.Lua.LuaEnv.Global.Get<XLua.LuaFunction>("ReceiveMessage");
+        Messages = new Queue<KeyValuePair<int, string>>();
+        //ReceiveMessage = GameManager.Instance.GetManager<LuaManager>(GameManager.ManagerName.Lua).LuaEnv.Global.Get<XLua.LuaFunction>("ReceiveMessage");
     }
 
     void Update()
@@ -27,37 +28,28 @@ public class NetManager : MonoBehaviour
     /// </summary>
     /// <param name="msgid">ID</param>
     /// <param name="message">消息体</param>
-    public void Receive(int msgid, string message)
-    {
-        Messages.Enqueue(new KeyValuePair<int, string>(msgid,message));
-    }
+    public void Receive(int msgid, string message) => Messages.Enqueue(new KeyValuePair<int, string>(msgid, message));
 
     /// <summary>
     /// 发送消息
     /// </summary>
     /// <param name="messageid">消息ID</param>
     /// <param name="message">消息体</param>
-    public void SendMessage(int messageid, string message)
-    {
-        Client.SendMessage(messageid,message);
-    }
+    public void SendMessage(int messageid, string message) => Client.SendMessage(messageid,message);
 
     /// <summary>
     /// 连接服务器
     /// </summary>
     /// <param name="post">地址</param>
     /// <param name="port">端口</param>
-    public void ConnectService(string post, int port)
-    {
-        Client.OnConnectServer(post,port);
-    }
+    public void ConnectService(string post, int port) => Client.OnConnectServer(post,port);
 
     /// <summary>
     /// 网络连接
     /// </summary>
     public void NetConnected()
     {
-
+        
     }
 
     /// <summary>
@@ -67,5 +59,4 @@ public class NetManager : MonoBehaviour
     {
 
     }
-
 }

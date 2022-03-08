@@ -2,21 +2,18 @@
 
 public class SoundManager : MonoBehaviour
 {
-
-    private AudioSource MusuicAudio;
-    private float MusuicVolume
+    AudioSource MusuicAudio;
+    AudioSource SoundAudio;
+    float MusuicVolume
     {
-        get { return PlayerPrefs.GetFloat("Musuic", 1.0f);  }
+        get { return PlayerPrefs.GetFloat("Musuic", 1.0f); }
         set
         {
             MusuicAudio.volume = value;
             PlayerPrefs.SetFloat("MusuicVolume", value);
         }
     }
-    public void SetMusicVolume(float value) => this.MusuicVolume = value;
-
-    private AudioSource SoundAudio;
-    private float SoundVolume
+    float SoundVolume
     {
         get { return PlayerPrefs.GetFloat("Sound", 1.0f); }
         set
@@ -25,8 +22,7 @@ public class SoundManager : MonoBehaviour
             PlayerPrefs.SetFloat("SoundVolume", value);
         }
     }
-    public void SetSoundVolume(float value) => this.SoundVolume = value;
-    
+
     void Awake()
     {
         MusuicAudio = this.gameObject.AddComponent<AudioSource>();
@@ -56,13 +52,25 @@ public class SoundManager : MonoBehaviour
             MusuicAudio.Play();
             return;
         }
-        Manager.Resourece.LoadMusic(name, (UnityEngine.Object obj) =>
+        GameManager.Instance.GetManager<ResoureceManager>(GameManager.ManagerName.Resourece).LoadMusic(name, (UnityEngine.Object obj) =>
         {
             MusuicAudio.clip = obj as AudioClip;
             MusuicAudio.Play();
         });
     }
 
+    /// <summary>
+    /// 设置音乐音量
+    /// </summary>
+    /// <param name="value"></param>
+    public void SetMusicVolume(float value) => this.MusuicVolume = value;
+    
+    /// <summary>
+    /// 设置音效音量
+    /// </summary>
+    /// <param name="value"></param>
+    public void SetSoundVolume(float value) => this.SoundVolume = value;
+    
     /// <summary>
     /// 暂停音乐
     /// </summary>
@@ -88,10 +96,9 @@ public class SoundManager : MonoBehaviour
         {
             return;
         }
-        Manager.Resourece.LoadSound(name, (UnityEngine.Object obj) =>
+        GameManager.Instance.GetManager<ResoureceManager>(GameManager.ManagerName.Resourece).LoadSound(name, (UnityEngine.Object obj) =>
         {
             SoundAudio.PlayOneShot(obj as AudioClip);
         });
     }
-
 }

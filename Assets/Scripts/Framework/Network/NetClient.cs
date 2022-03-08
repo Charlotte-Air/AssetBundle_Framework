@@ -65,7 +65,7 @@ public class NetClient
             Tcpstream.Close();
             Tcpstream = null;
         }
-        Manager.Net.DisConnected();
+        GameManager.Instance.GetManager<NetManager>(GameManager.ManagerName.Net).DisConnected();
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ public class NetClient
             Debug.LogError("Connect Server Error!");
             return;
         }
-        Manager.Net.NetConnected();
+        GameManager.Instance.GetManager<NetManager>(GameManager.ManagerName.Net).NetConnected();
         Tcpstream = Client.GetStream();
         Tcpstream.BeginRead(Buffer, 0, BufferSize, OnRead, null);
     }
@@ -131,7 +131,7 @@ public class NetClient
             {
                 byte[] data = BinaryReader.ReadBytes(msgLen);
                 string message = System.Text.Encoding.UTF8.GetString(data);
-                Manager.Net.Receive(msgid, message); //转到Lua
+                GameManager.Instance.GetManager<NetManager>(GameManager.ManagerName.Net).Receive(msgid, message); //转到Lua
             }
             else
             {

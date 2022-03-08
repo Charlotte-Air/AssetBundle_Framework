@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using UnityEngine;
 
 public class UI : LuaBehaviour
@@ -24,7 +24,7 @@ public class UI : LuaBehaviour
     public void OnClose()
     {
         LuaOnClose?.Invoke();
-        Manager.Pool.RecycleObject("UI", AssestName, this.gameObject);
+        GameManager.Instance.GetManager<ObjectPoolManager>(GameManager.ManagerName.Pool).RecycleObject(PoolType.UI, AssestName, this.gameObject);
     }
     
     protected override void Clear()

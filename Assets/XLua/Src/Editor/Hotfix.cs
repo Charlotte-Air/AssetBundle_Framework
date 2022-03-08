@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
-
+using Debug = UnityEngine.Debug;
 #if XLUA_GENERAL
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -1653,7 +1653,7 @@ namespace XLua
             var mono_path = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName),
                 "Data/MonoBleedingEdge/bin/mono.exe");
 #endif
-            var inject_tool_path = "./Tools/XLuaHotfixInject.exe";
+            var inject_tool_path = "E:/fpsclt/trunk/tools/Tools/XLuaHotfixInject.exe";
             if (!File.Exists(inject_tool_path))
             {
                 UnityEngine.Debug.LogError("please install the Tools");

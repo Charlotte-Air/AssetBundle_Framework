@@ -1,0 +1,19 @@
+local Manager = class()
+
+function Manager.Create()
+    local o = Manager:new()
+    return o
+end
+
+function Manager:GetManager(name)
+    if name ~= "" then
+        local manager = CS.GameManager.Instance:GetManagerObject(name);
+        if manager ~= nil then
+            return manager
+        end
+        return nil
+    end
+    return nil
+end
+
+return Manager

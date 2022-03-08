@@ -1,0 +1,20 @@
+--package.cpath = package.cpath .. ';C:/Users/FG/AppData/Roaming/JetBrains/Rider2021.3/plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
+--dbg = require('emmy_core')
+--dbg.tcpConnect('localhost', 9966)
+--------------------------------------------------------------------------------------------------------
+--加载全局模块，集中管理
+--require 'Util.event'
+--require 'Util.public'
+--require 'Util.plugin'
+--require 'Util.list'
+--require 'Util.tools'
+--require 'Util.update'
+--require 'Framework.UI'
+require("Util.Class")
+Manager = require("Message.manager").Create()
+PathUtil = CS.PathUtil;
+Vector3 = CS.UnityEngin.Vector3;
+Input = CS.UnityEngin.Input;
+KeyCode = CS.UnityEngin.KeyCode;
+Time = CS.UnityEngin.Time;
+Log = 'Util.Log'

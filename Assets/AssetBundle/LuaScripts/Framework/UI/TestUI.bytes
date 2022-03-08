@@ -1,0 +1,95 @@
+function OnInit()
+    print("Lua OnInit")
+end
+
+function OnOpen()
+    print("Lua OnOpen")
+    local SoundManager = Manager:GetManager("SoundManager")
+    local UIManager = Manager:GetManager("UIManager")
+    --Manager.Scene:LoadScene("Test1","scene.Test1")
+    local PlayMusic = self.transform:Find("PlayMusic"):GetComponent("Button")
+    local StopMusic = self.transform:Find("StopMusic"):GetComponent("Button")
+    local PauseMusic = self.transform:Find("PauseMusic"):GetComponent("Button")
+    local UnPauseMusic = self.transform:Find("UnPauseMusic"):GetComponent("Button")
+    local PlaySound = self.transform:Find("PlaySound"):GetComponent("Button")
+    local Pool = self.transform:Find("Pool"):GetComponent("Button")
+    local Close = self.transform:Find("Close"):GetComponent("Button")
+    local MusicVolume = self.transform:Find("MusicVolume"):GetComponent("Slider")
+    local SoundVolume = self.transform:Find("SoundVolume"):GetComponent("Slider")
+
+    PlayMusic:OnClickSet
+    (
+            function ()
+                SoundManager:PlayMusic("Music_1.mp3")
+            end
+    )
+
+    Pool:OnClickSet
+    (
+            function ()
+                UIManager:ShowUI("Character","UI","Framework.Entity.PlayerEntity");
+                --messageMgr.get.msg("messageTest"):req_first_test(1000,"Charlotte","555",{1,3,5});
+            end
+    )
+
+    Close:OnClickSet
+    (
+            function ()
+                self:OnClose()
+            end
+    )
+
+    PauseMusic:OnClickSet
+    (   
+            function ()
+                SoundManager:PauseMusic()
+            end
+    )
+
+    UnPauseMusic:OnClickSet
+    (
+            function ()
+                SoundManager:OnUnPauseMusic()
+            end
+    )
+
+    StopMusic:OnClickSet
+    (
+            function ()
+                SoundManager:StopMusic()
+            end
+    )
+
+    PlaySound:OnClickSet
+    (
+            function ()
+                SoundManager:PlaySound("Sound_1.mp3")
+            end
+    )
+
+
+    MusicVolume:OnValueChangedSet
+    (
+            function (volume)
+                SoundManager:SetMusicVolume(volume)
+            end
+    )
+
+    SoundVolume:OnValueChangedSet
+    (
+            function (volume)
+                SoundManager:SetMusicVolume(volume)
+            end
+    )
+
+    MusicVolume.value =1
+    SoundVolume.value =1
+end
+
+function Update()
+
+end
+
+function OnClose()
+    print("Lua OnClose")
+end

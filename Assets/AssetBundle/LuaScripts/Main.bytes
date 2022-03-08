@@ -1,0 +1,23 @@
+require 'Util.Global'
+
+local UI_Group =
+{
+    "Main",
+    "UI",
+    "Box",
+}
+
+local Entity_Group =
+{
+    "Player",
+    "Monster",
+    "Effect",
+}
+
+function MainInit()
+    print("Lua Service.....")
+    local ui = Manager:GetManager("UIManager")
+    ui:SetGroup(UI_Group)
+    Manager:GetManager("EntityManager"):SetEnitiyGroup(Entity_Group)
+    ui:ShowUI("TestUI","UI","Framework.UI.TestUI")
+end

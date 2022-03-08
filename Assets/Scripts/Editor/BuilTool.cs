@@ -29,11 +29,11 @@ public class BuilTool : Editor
             string assetName = PathUtil.GetUnityPath(fileName);
             assetBundle.assetNames = new string[] {assetName};
             string bundleName = files[i].Replace(PathUtil.BuildResourcesPath, "").ToLower();
-            assetBundle.assetBundleName = bundleName + ".ab";
+            assetBundle.assetBundleName = bundleName + AppConst.BundleExtension;
             assetBundleBuilds.Add(assetBundle);
             //添加文件与依赖信息
             List<string> dependenceInfo = GetDependence(assetName);
-            string bundleInfo = assetName + "|" + bundleName + ".ab";
+            string bundleInfo = assetName + "|" + bundleName + AppConst.BundleExtension;
             if (dependenceInfo.Count > 0)
             {
                 bundleInfo = bundleInfo + "|" + string.Join("|", dependenceInfo);
@@ -49,8 +49,8 @@ public class BuilTool : Editor
         File.WriteAllLines(PathUtil.BuildeOutPath + "/" + AppConst.FileListName, bundlieInfos);
         AssetDatabase.Refresh();
     }
-    //获取依赖文件列表
-    static List<string> GetDependence(string curFile)
+    
+    static List<string> GetDependence(string curFile) //获取依赖文件列表
     {
         List<string> dependenceList = new List<string>();
         string[] files = AssetDatabase.GetDependencies(curFile);

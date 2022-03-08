@@ -45,10 +45,9 @@ public class ResoureceManager : MonoBehaviour
                 bundeInfo.Dependences.Add(info[j]);
             }
             BundleInfos.Add(bundeInfo.AssetsName,bundeInfo);
-
             if (info[0].IndexOf("LuaScripts") > 0) //查找Lua文件夹
             {
-                Manager.Lua.LuaNames.Add(info[0]);
+                GameManager.Instance.GetManager<LuaManager>(GameManager.ManagerName.Lua).AddLuaScript(info[0]);
             }
         }
     }
@@ -72,7 +71,7 @@ public class ResoureceManager : MonoBehaviour
         BundlData bundle = GetBundle(bundleName);
         if (bundle == null)
         {
-            UnityEngine.Object obj = Manager.Pool.TakeObject("AssestBundle", bundleName); //取对象池Bundle
+            UnityEngine.Object obj = GameManager.Instance.GetManager<ObjectPoolManager>(GameManager.ManagerName.Pool).TakeObject(PoolType.AssetsBundle,bundleName); //取对象池Bundle
             if (obj != null)
             {
                 AssetBundle ab = obj as AssetBundle;
@@ -127,32 +126,7 @@ public class ResoureceManager : MonoBehaviour
         }
         return null;
     }
-
-    /// <summary>
-    /// 减去Bundle依赖引用计数
-    /// </summary>
-    /// <param name="assetsName">资源名</param>
-    public void MinusBundleCount(string assetsName)
-    {
-        string bundleName = BundleInfos[assetsName].BundleName;
-        MinusOneBundleCount(bundleName);
-        List<string> dependences = BundleInfos[assetsName].Dependences;
-        if (dependences != null)
-        {
-            var en = dependences.GetEnumerator();
-            while (en.MoveNext())
-            {
-                string name = BundleInfos[en.Current].BundleName;
-                MinusOneBundleCount(name);
-            }
-            // foreach (string key in dependences)
-            // {
-            //     string name = BundleInfos[key].BundleName;
-            //     MinusOneBundleCount(name);
-            // }
-        }
-    }
-
+    
     void MinusOneBundleCount(string bundleName)
     {
         if(assetBundles.TryGetValue(bundleName,out BundlData bundldata))
@@ -160,12 +134,12 @@ public class ResoureceManager : MonoBehaviour
             if (bundldata.Count > 0)
             {
                 bundldata.Count--;
-                Debug.LogFormat("{0}引用数:{1}", bundleName, bundldata.Count);
+                Debug.LogFormat($"{bundleName} 引用数:{bundldata.Count}");
             }
             if (bundldata.Count <= 0)
             {
-                Debug.LogFormat("{0}放入Bundle对象池", bundleName);
-                Manager.Pool.RecycleObject("AssetsBundle", bundleName, bundldata.Bundle);
+                Debug.LogFormat($"{bundleName} 放入Bundle对象池");
+                GameManager.Instance.GetManager<ObjectPoolManager>(GameManager.ManagerName.Pool).RecycleObject(PoolType.AssetsBundle,bundleName, bundldata.Bundle);
                 assetBundles.Remove(bundleName);
             }
         }
@@ -190,17 +164,17 @@ public class ResoureceManager : MonoBehaviour
 
 
     /// <summary>
-    ///  加载资源
+    /// 加载资源
     /// </summary>
     /// <param name="assestName">资源名</param>
     /// <param name="action">回调</param>
     void LoadAssest(string assestName, Action<UnityEngine.Object> action)
     {
 #if UNITY_EDITOR //避免Build出错
-        if (AppConst.gameMode == GameMode.EditorMode)
+        if (AppConst.gameMode == AppConst.GameMode.EditorMode)
             EditorLoadAssest(assestName, action);
 #endif
-        if (AppConst.gameMode != GameMode.EditorMode)
+        if (AppConst.gameMode != AppConst.GameMode.EditorMode)
             StartCoroutine(LoadBundleAsync(assestName, action));
     }
 
@@ -210,11 +184,32 @@ public class ResoureceManager : MonoBehaviour
     /// <param name="name">资源名</param>
     public void ReleaseBundle(UnityEngine.Object obj)
     {
-        AssetBundle ab =  obj as AssetBundle;
+        AssetBundle ab = obj as AssetBundle;
         ab.Unload(true);
     }
 
-
+    /// <summary>
+    /// 减去Bundle依赖引用计数
+    /// </summary>
+    /// <param name="assetsName">资源名</param>
+    public void MinusBundleCount(string assetsName)
+    {
+        if (BundleInfos.ContainsKey(assetsName))
+        {
+            string bundleName = BundleInfos[assetsName].BundleName;
+            MinusOneBundleCount(bundleName);
+            var dependences = BundleInfos[assetsName].Dependences.GetEnumerator();
+            while (dependences.MoveNext())
+            {
+                if (BundleInfos.ContainsKey(dependences.Current))
+                {
+                    string name = BundleInfos[dependences.Current].BundleName;
+                    MinusOneBundleCount(name);
+                }
+            }
+        }
+    }
+    
     #region 加载接口
     /// <summary>
     /// 加载UI

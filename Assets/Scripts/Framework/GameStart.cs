@@ -3,52 +3,49 @@
  public class GameStart : MonoBehaviour
 {
     public bool OpenLog;
-<<<<<<< HEAD
-    public GameMode GameMode;
-=======
-    public GameMode GameMode = GameMode.Default;
->>>>>>> 02a2b943112880eea05a74e017239d1b82d3cda6
-    
-    void Start()
+    public AppConst.GameMode GameMode;
+
+    void Awake()
     {
-        Manager.Event.Subscribe((int)GameEvent.StartLua, StartLua);
-        Manager.Event.Subscribe((int)GameEvent.GameInit, GameInit);
-        if (GameMode == GameMode.Default)
-        {
-#if UNITY_EDITOR
-            GameMode = GameMode.UpdateMode;
-#elif !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IPHONE)
-            GameMode = GameMode.UpdateMode;
-#endif
-        }
+        GameManager.Instance.Init();
         AppConst.gameMode = this.GameMode;
         AppConst.OpenLog = this.OpenLog;
-        DontDestroyOnLoad(this);
-        if (AppConst.gameMode == GameMode.UpdateMode)
-            this.gameObject.AddComponent<HotUpdate>();
-        else
-            Manager.Event.PerformEvent((int) GameEvent.GameInit);
-    }
-    
-    void GameInit(object args)
-    {
-        if (AppConst.gameMode != GameMode.EditorMode)
-            Manager.Resourece.ParseVersionFile();
-        Manager.Lua.Init();
     }
 
-    void StartLua(object args)
+    void Start()
     {
-        Manager.Pool.CreateGameObjectPool("UI", 10);
-        Manager.Pool.CreateAssestPool("AssestBundle", 10);
-        Manager.Lua.StartLua("main");
-        XLua.LuaFunction func = Manager.Lua.LuaEnv.Global.Get<XLua.LuaFunction>("Test");
-        func.Call();
+        GameManager.Instance.GetManager<NetManager>(GameManager.ManagerName.Net).Init();
+        var message = GameManager.Instance.GetManager<MessageManager>(GameManager.ManagerName.Message);
+        message.Subscribe(MessageType.GameInit, GameInit);
+        message.Subscribe(MessageType.StartLua, StartLua);
+        DontDestroyOnLoad(this);
+        if (AppConst.gameMode == AppConst.GameMode.UpdateMode)
+            gameObject.AddComponent<HotUpdate>();
+        else
+            message.NotifyMessage(MessageType.GameInit);
+    }
+    
+    void GameInit(object o)
+    {
+        if (AppConst.gameMode != AppConst.GameMode.EditorMode)
+        {
+            GameManager.Instance.GetManager<ResoureceManager>(GameManager.ManagerName.Resourece).ParseVersionFile();
+        }
+        GameManager.Instance.GetManager<LuaManager>(GameManager.ManagerName.Lua).Init();
+        GameManager.Instance.GetManager<ObjectPoolManager>(GameManager.ManagerName.Pool).Init();
+    }
+
+    void StartLua(object o)
+    {
+        var lua = GameManager.Instance.GetManager<LuaManager>(GameManager.ManagerName.Lua);
+        lua.StartLua("Main"); 
+        lua.LuaEnv.Global.Get<XLua.LuaFunction>("MainInit").Call();
     }
 
     void OnApplicationQuit()
     {
-        Manager.Event.UnSubscribe((int)GameEvent.StartLua, StartLua);
-        Manager.Event.UnSubscribe((int)GameEvent.GameInit, GameInit);
+        var message = GameManager.Instance.GetManager<MessageManager>(GameManager.ManagerName.Message);
+        message.Unsubscribe(MessageType.GameInit);
+        message.Unsubscribe(MessageType.StartLua);
     }
 }

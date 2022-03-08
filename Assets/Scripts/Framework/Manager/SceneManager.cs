@@ -74,7 +74,7 @@ public class SceneManager : MonoBehaviour
     /// <param name="luaName">Lua脚本名</param>
     public void LoadScene(string sceneName, string luaName)
     {
-        Manager.Resourece.LoadScone(sceneName,(UnityEngine.Object obj)=>
+        GameManager.Instance.GetManager<ResoureceManager>(GameManager.ManagerName.Resourece).LoadScone(sceneName,(UnityEngine.Object obj)=>
         {
             StartCoroutine(StartLoadScene(sceneName, luaName, LoadSceneMode.Additive));
         });
@@ -87,7 +87,7 @@ public class SceneManager : MonoBehaviour
     /// <param name="luaName">Lua脚本名</param>
     public void ChangeScene(string sceneName, string luaName)
     {
-        Manager.Resourece.LoadScone(sceneName, (UnityEngine.Object obj) =>
+        GameManager.Instance.GetManager<ResoureceManager>(GameManager.ManagerName.Resourece).LoadScone(sceneName, (UnityEngine.Object obj) =>
         {
             StartCoroutine(StartLoadScene(sceneName, luaName, LoadSceneMode.Single));
         });

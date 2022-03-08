@@ -1,0 +1,85 @@
+function class(base)
+    local newClass = {}
+    newClass.base = base
+
+    newClass.new = function(...)
+        local obj = {}
+        local currentClass = newClass
+        local currentObj = obj
+        local bases = {}
+
+        while currentClass ~= nil do
+            for k, v in pairs(currentClass) do
+                if type(v) == "function" then
+                    currentObj[k] = v
+                end
+
+                if obj[k] == nil and k ~= "base" and k ~= "new" then
+                    if type(v) == "table" then
+                        obj[k] = {}
+                        depthCopy(v, obj[k])
+                    else
+                        obj[k] = v
+                    end
+                end
+            end
+
+            bases[#bases + 1] = currentObj
+            currentObj.base = {}
+            currentObj = currentObj.base
+            currentClass = currentClass.base
+        end
+
+        for i = 2, #bases do
+            local base = bases[i]
+
+            for k, v in pairs(base) do
+                if type(v) == "function" then
+                    setVirtualFunction(base, k)
+                end
+            end
+        end
+
+        currentObj.base = nil
+
+        return obj
+    end
+
+    return newClass
+end
+
+function depthCopy(from, to)
+    for k, v in pairs(from) do
+        if type(v) == "table" then
+            to[k] = {}
+            depthCopy(v, to[k])
+        else
+            to[k] = v
+        end
+    end
+end
+
+function setVirtualFunction(target, targetFunction)
+    local oldFunction = target[targetFunction]
+
+    local newFunction = function(self, ...)
+        if self.base == nil then
+            oldFunction(self, ...)
+            return
+        end
+
+        if self.base.base == nil then
+            oldFunction(self, ...)
+            return
+        end
+
+        local basebase = self.base.base
+        local base = self.base
+
+        self.base = basebase
+        oldFunction(self, ...)
+        self.base = base
+    end
+
+    target[targetFunction] = newFunction
+end

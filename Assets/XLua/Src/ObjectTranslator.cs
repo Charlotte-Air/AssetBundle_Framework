@@ -26,6 +26,153 @@ namespace XLua
     using System.Diagnostics;
     using System.Linq;
 
+    /// <summary>
+    /// 使用该类型，在lua下会转为数组table
+    /// </summary>
+    public class LuaListTable : IList
+    {
+        public IList Data {  get; }
+
+        public LuaListTable()
+        {
+            Data = new List<object>();
+        }
+        public LuaListTable(IList data)
+        {
+            Data = data;
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return Data.GetEnumerator();
+        }
+
+        public void CopyTo(Array array, int index)
+        {
+            Data.CopyTo(array, index);
+        }
+
+        public int Count => Data.Count;
+
+        public bool IsSynchronized => Data.IsSynchronized;
+
+        public object SyncRoot => Data.SyncRoot;
+
+        public int Add(object value)
+        {
+            return Data.Add(value);
+        }
+
+        public void Clear()
+        {
+            Data.Clear();
+        }
+
+        public bool Contains(object value)
+        {
+            return Data.Contains(value);
+        }
+
+        public int IndexOf(object value)
+        {
+            return Data.IndexOf(value);
+        }
+
+        public void Insert(int index, object value)
+        {
+            Data.Insert(index, value);
+        }
+
+        public void Remove(object value)
+        {
+            Data.Remove(value);
+        }
+
+        public void RemoveAt(int index)
+        {
+            Data.RemoveAt(index);
+        }
+
+        public bool IsFixedSize => Data.IsFixedSize;
+
+        public bool IsReadOnly => Data.IsReadOnly;
+
+        public object this[int index]
+        {
+            get => Data[index];
+            set => Data[index] = value;
+        }
+    }
+
+    /// <summary>
+    /// 使用该类型，在lua下会转为字典table
+    /// </summary>
+    public class LuaDicTable : IDictionary
+    {
+        public IDictionary Data { get; }
+
+        public LuaDicTable()
+        {
+            Data = new Dictionary<object, object>();
+        }
+
+        public LuaDicTable(IDictionary data)
+        {
+            Data = data;
+        }
+
+        public void Add(object key, object value)
+        {
+            Data.Add(key, value);
+        }
+
+        public void Clear()
+        {
+            Data.Clear();
+        }
+
+        public bool Contains(object key)
+        {
+            return Data.Contains(key);
+        }
+
+        public IDictionaryEnumerator GetEnumerator()
+        {
+            return Data.GetEnumerator();
+        }
+
+        public void Remove(object key)
+        {
+            Data.Remove(key);
+        }
+
+        public bool IsFixedSize => Data.IsFixedSize;
+        public bool IsReadOnly => Data.IsReadOnly;
+
+        public object this[object key]
+        {
+            get => Data[key];
+            set => Data[key] = value;
+        }
+
+        public ICollection Keys => Data.Keys;
+        public ICollection Values => Data.Values;
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Data.GetEnumerator();
+        }
+
+        public void CopyTo(Array array, int index)
+        {
+            Data.CopyTo(array, index);
+        }
+
+        public int Count => Data.Count;
+        public bool IsSynchronized => Data.IsSynchronized;
+        public object SyncRoot => Data.SyncRoot;
+    }
+
     class ReferenceEqualsComparer : IEqualityComparer<object>
     {
         public new bool Equals(object o1, object o2)
@@ -364,13 +511,11 @@ namespace XLua
                 return null;
             }
             var parameters = delegateMethod.GetParameters();
-#if !XLUA_GENERAL
             if ((delegateMethod.ReturnType.IsValueType() && delegateMethod.ReturnType != typeof(void)) || parameters.Length > 4)
             {
                 genericDelegateCreator = (x) => null;
             }
             else
-#endif
             {
                 foreach (var pinfo in parameters)
                 {
@@ -1177,6 +1322,38 @@ namespace XLua
             {
                 Push(L, o as LuaCSFunction);
             }
+            else if (o is LuaListTable)
+            {
+                var tbl = o as LuaListTable;
+                LuaAPI.lua_createtable(L, tbl.Count, 0);
+                var tblIndex = LuaAPI.lua_gettop(L);
+                for (var i = 0; i < tbl.Count; i++)
+                {
+                    PushAny(L, tbl[i]);
+                    LuaAPI.xlua_rawseti(L, tblIndex, i+1);
+                }
+            }
+            else if (o is LuaDicTable)
+            {
+                var tbl = o as LuaDicTable;
+                LuaAPI.lua_createtable(L, 0, 0);
+                var tblIndex = LuaAPI.lua_gettop(L);
+                foreach (DictionaryEntry entry in tbl)
+                {
+                    Type eType = entry.Key.GetType();
+                    if (eType.IsPrimitive())
+                    {
+                        pushPrimitive(L, entry.Key);
+                    }
+                    else
+                    {
+                        LuaAPI.lua_pushstring(L, entry.Key.ToString());
+                    }
+                    
+                    PushAny(L, entry.Value);
+                    LuaAPI.lua_rawset(L, tblIndex);
+                }
+            }
             else if (o is ValueType)
             {
                 PushCSObject push;
@@ -1253,39 +1430,46 @@ namespace XLua
             }
 
             int index = -1;
-            Type type = o.GetType();
+            if (o is LuaListTable || o is LuaDicTable)
+            {
+                PushAny(L, o);
+            }
+            else
+            {
+                Type type = o.GetType();
 #if !UNITY_WSA || UNITY_EDITOR
-            bool is_enum = type.IsEnum;
-            bool is_valuetype = type.IsValueType;
+                bool is_enum = type.IsEnum;
+                bool is_valuetype = type.IsValueType;
 #else
             bool is_enum = type.GetTypeInfo().IsEnum;
             bool is_valuetype = type.GetTypeInfo().IsValueType;
 #endif
-            bool needcache = !is_valuetype || is_enum;
-            if (needcache && (is_enum ? enumMap.TryGetValue(o, out index) : reverseMap.TryGetValue(o, out index)))
-            {
-                if (LuaAPI.xlua_tryget_cachedud(L, index, cacheRef) == 1)
+                bool needcache = !is_valuetype || is_enum;
+                if (needcache && (is_enum ? enumMap.TryGetValue(o, out index) : reverseMap.TryGetValue(o, out index)))
                 {
-                    return;
+                    if (LuaAPI.xlua_tryget_cachedud(L, index, cacheRef) == 1)
+                    {
+                        return;
+                    }
+                    //这里实在太经典了，weaktable先删除，然后GC会延迟调用，当index会循环利用的时候，不注释这行将会导致重复释放
+                    //collectObject(index);
                 }
-                //这里实在太经典了，weaktable先删除，然后GC会延迟调用，当index会循环利用的时候，不注释这行将会导致重复释放
-                //collectObject(index);
-            }
 
-            bool is_first;
-            int type_id = getTypeId(L, type, out is_first);
+                bool is_first;
+                int type_id = getTypeId(L, type, out is_first);
 
-            //如果一个type的定义含本身静态readonly实例时，getTypeId会push一个实例，这时候应该用这个实例
-            if (is_first && needcache && (is_enum ? enumMap.TryGetValue(o, out index) : reverseMap.TryGetValue(o, out index))) 
-            {
-                if (LuaAPI.xlua_tryget_cachedud(L, index, cacheRef) == 1)
+                //如果一个type的定义含本身静态readonly实例时，getTypeId会push一个实例，这时候应该用这个实例
+                if (is_first && needcache && (is_enum ? enumMap.TryGetValue(o, out index) : reverseMap.TryGetValue(o, out index)))
                 {
-                    return;
+                    if (LuaAPI.xlua_tryget_cachedud(L, index, cacheRef) == 1)
+                    {
+                        return;
+                    }
                 }
-            }
 
-            index = addObject(o, is_valuetype, is_enum);
-            LuaAPI.xlua_pushcsobj(L, index, type_id, needcache, cacheRef);
+                index = addObject(o, is_valuetype, is_enum);
+                LuaAPI.xlua_pushcsobj(L, index, type_id, needcache, cacheRef);
+            }
         }
 
         public void PushObject(RealStatePtr L, object o, int type_id)

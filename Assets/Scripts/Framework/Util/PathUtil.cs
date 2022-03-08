@@ -9,7 +9,7 @@ public static class PathUtil
     ///<summary>
     /// Build输入目录
     /// </summary>
-    public static readonly string BuildResourcesPath = AssetsPath + "/BuildResources/";
+    public static readonly string BuildResourcesPath = AssetsPath + "/AssetBundle/";
     ///<summary>
     /// Build输出目录
     /// </summary>
@@ -21,7 +21,7 @@ public static class PathUtil
     {
         get
         {
-            if (AppConst.gameMode == GameMode.UpdateMode)
+            if (AppConst.gameMode == AppConst.GameMode.UpdateMode)
                 return ReadWritePath;
             return ReadPath;
         }
@@ -38,7 +38,7 @@ public static class PathUtil
     /// <summary>
     /// Lua目录路径
     /// </summary>
-    public static readonly string LuaPath = "Assets/BuildResources/LuaScripts";
+    public static readonly string LuaPath = "Assets/AssetBundle/LuaScripts";
 
     /// <summary>
     /// 获取Unity相对路径
@@ -66,50 +66,46 @@ public static class PathUtil
 
 
     #region 资源接口
-<<<<<<< HEAD
     
-=======
-
->>>>>>> 02a2b943112880eea05a74e017239d1b82d3cda6
     ///<summary>
     /// 获取Lua路径
     /// </summary>
-    public static string GetLuaPath(string name) => $"Assets/BuildResources/LuaScripts/{name}.bytes";
+    public static string GetLuaPath(string name) => $"Assets/AssetBundle/LuaScripts/{name}.bytes";
 
     ///<summary>
     /// 获取UI路径
     /// </summary>
-    public static string GetUIPath(string name) => $"Assets/BuildResources/UI/prefabs/{name}.prefab";
+    public static string GetUIPath(string name) => $"Assets/AssetBundle/UI/prefabs/{name}.prefab";
 
     ///<summary>
     /// 获取场景路径
     /// </summary>
-    public static string GetScenePath(string name) => $"Assets/BuildResources/Scenes/{name}.unity";
+    public static string GetScenePath(string name) => $"Assets/AssetBundle/Scenes/{name}.unity";
 
     ///<summary>
     /// 获取特效路径
     /// </summary>
-    public static string GetEffectPath(string name) => $"Assets/BuildResources/Effect/prefabs/{name}.prefab";
+    public static string GetEffectPath(string name) => $"Assets/AssetBundle/Effect/prefabs/{name}.prefab";
 
     ///<summary>
     /// 获取模型路径
     /// </summary>
-    public static string GetModelPath(string name) => $"Assets/BuildResources/Model/prefabs/{name}.prefab";
+    public static string GetModelPath(string name) => $"Assets/AssetBundle/Model/prefabs/{name}.prefab";
 
     ///<summary>
     /// 获取音乐路径
     /// </summary>
-    public static string GetMusicPath(string name) => $"Assets/BuildResources/Audio/Music/{name}";
+    public static string GetMusicPath(string name) => $"Assets/AssetBundle/Audio/Music/{name}";
 
     ///<summary>
     /// 获取音效路径
     /// </summary>
-    public static string GetSoundPath(string name) => $"Assets/BuildResources/Audio/Sound/{name}";
+    public static string GetSoundPath(string name) => $"Assets/AssetBundle/Audio/Sound/{name}";
 
     ///<summary>
     /// 获取贴图路径
     /// </summary>
-    public static string GetSpritePath(string name) => $"Assets/BuildResources/Sprite/{name}";
+    public static string GetSpritePath(string name) => $"Assets/AssetBundle/Sprite/{name}";
 
     #endregion
 }

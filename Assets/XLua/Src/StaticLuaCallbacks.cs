@@ -626,6 +626,13 @@ namespace XLua
 
                     LuaAPI.lua_pop(L, 1);  /* pop result */
                 }
+
+                LuaAPI.xlua_getglobal(L, "debug");
+                //LuaAPI.lua_getfield(L, -1, "traceback");
+                LuaAPI.lua_pcall(L, 0, 1, 0);
+                s += "\n";
+                s += LuaAPI.lua_tostring(L, -1);
+
                 UnityEngine.Debug.Log("LUA: " + s);
                 return 0;
             }

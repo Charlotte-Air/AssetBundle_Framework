@@ -4,12 +4,19 @@ using System.Collections.Generic;
 public class EntityManager : MonoBehaviour
 {
     Transform EntityParent;
-    Dictionary<string, GameObject> Entitys = new Dictionary<string, GameObject>(); //缓存集合
-    Dictionary<string, Transform> Groups = new Dictionary<string, Transform>(); //分组集合
+    Dictionary<string, Transform> groups;   //分组集合
+    Dictionary<string, GameObject> entitys; //缓存集合
 
     void Awake()
     {
         EntityParent = this.transform.parent.Find("Entity");
+        Init();
+    }
+    
+    void Init()
+    {
+        entitys = new Dictionary<string, GameObject>(); //缓存集合
+        groups = new Dictionary<string, Transform>();
     }
 
     /// <summary>
@@ -20,9 +27,9 @@ public class EntityManager : MonoBehaviour
     {
         for (int i = 0; i < group.Count; i++)
         {
-            GameObject go = new GameObject("Group-" + group[i]);
+            GameObject go = new GameObject("Group - " + group[i]);
             go.transform.SetParent(EntityParent, false);
-            Groups.Add(group[i], go.transform);
+            groups.Add(group[i], go.transform);
         }
     }
 
@@ -33,9 +40,9 @@ public class EntityManager : MonoBehaviour
     /// <returns></returns>
     Transform GetEnitiyGroup(string group)
     {
-        if (!Groups.ContainsKey(group))
-            Debug.LogError("Group is Not Exist");
-        return Groups[group];
+        if (!groups.ContainsKey(group))
+            Debug.LogError(group + "GetGroup Exception!!!");
+        return groups[group];
     }
 
     /// <summary>
@@ -47,16 +54,16 @@ public class EntityManager : MonoBehaviour
     public void ShowEntity(string Name, string group, string luaName)
     {
         GameObject entity = null;
-        if (Entitys.TryGetValue(Name, out entity)) //查找集合是否已经加载过
+        if (entitys.TryGetValue(Name, out entity)) //查找集合是否已经加载过
         {
             Entity logic = entity.GetComponent<Entity>();
             logic.OnShow();
             return;
         }
-        Manager.Resourece.LoadPrefab(Name, (UnityEngine.Object obj) =>
+        GameManager.Instance.GetManager<ResoureceManager>(GameManager.ManagerName.Resourece).LoadPrefab(Name, (UnityEngine.Object obj) =>
         {
             entity = Instantiate(obj) as GameObject;
-            Entitys.Add(Name, entity);
+            entitys.Add(Name, entity);
             Transform parent = GetEnitiyGroup(group);
             parent.transform.SetParent(parent, false);
             Entity en = entity.AddComponent<Entity>();

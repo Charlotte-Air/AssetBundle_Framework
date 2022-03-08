@@ -10,18 +10,13 @@ using System.Collections.Generic;
 using System;
 using XLua;
 using System.Reflection;
-using System.Linq;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
 
 //配置的详细介绍请看Doc下《XLua的配置.doc》
 public static class ExampleConfig
 {
-    [CSharpCallLua]
-    public static List<Type> mymodule_cs_call_lua_list = new List<Type>()
-    {
-        typeof(UnityEngine.Events.UnityAction<float>),
-    };
-
-
     /***************如果你全lua编程，可以参考这份自动化配置***************/
     //--------------begin 纯lua编程配置参考----------------------------
     //static List<string> exclude = new List<string> {
@@ -194,10 +189,6 @@ public static class ExampleConfig
     //    {
     //        foreach (var typeArg in type.GetGenericArguments())
     //        {
-    //            if (typeArg.IsGenericParameter) {
-    //                //skip unsigned type parameter
-    //                continue;
-    //            } 
     //            if (typeHasEditorRef(typeArg))
     //            {
     //                return true;
@@ -255,6 +246,66 @@ public static class ExampleConfig
     //}
     //--------------end 热补丁自动化配置-------------------------
 
+    //lua中要使用到C#库的配置，比如C#标准库，或者Unity API，第三方库等。
+    [LuaCallCSharp]
+    public static List<Type> LuaCallCSharp = new List<Type>() {
+                typeof(System.Object),
+                typeof(UnityEngine.Object),
+                typeof(Vector2),
+                typeof(Vector3),
+                typeof(Vector4),
+                typeof(Quaternion),
+                typeof(Color),
+                typeof(Ray),
+                typeof(Bounds),
+                typeof(Ray2D),
+                typeof(Time),
+                typeof(GameObject),
+                typeof(Component),
+                typeof(Behaviour),
+                typeof(Transform),
+                typeof(Resources),
+                typeof(TextAsset),
+                typeof(Keyframe),
+                typeof(AnimationCurve),
+                typeof(AnimationClip),
+                typeof(MonoBehaviour),
+                typeof(ParticleSystem),
+                typeof(SkinnedMeshRenderer),
+                typeof(Renderer),
+                typeof(WWW),
+                typeof(Physics),
+                typeof(Mathf),
+                typeof(System.Collections.Generic.List<int>),
+                typeof(Action<string>),
+                typeof(UnityEngine.Debug),
+                typeof(AudioSource),
+
+    };
+
+    //C#静态调用Lua的配置（包括事件的原型），仅可以配delegate，interface
+    [CSharpCallLua]
+    public static List<Type> CSharpCallLua = new List<Type>() {
+                typeof(Action),
+                typeof(Func<double, double, double>),
+                typeof(Action<string>),
+                typeof(Action<double>),
+                typeof(Action<uint>),
+                typeof(Action<Vector3>),
+                typeof(Action<Transform>),
+                typeof(Action<BaseEventData>),
+                typeof(Action<float, int, bool>),
+                typeof(Action<float, bool>),
+                typeof(System.Collections.IEnumerator),
+                typeof(UnityEngine.Events.UnityAction),
+                typeof(UnityEngine.Events.UnityAction<UnityEngine.Vector2>),
+                typeof(UnityEngine.Events.UnityAction<int>),
+                typeof(UnityEngine.Events.UnityAction<string>),
+                typeof(UnityEngine.Events.UnityAction<bool>),
+                typeof(UnityEngine.Events.UnityAction<float>),
+            };
+
+
     //黑名单
     [BlackList]
     public static List<List<string>> BlackList = new List<List<string>>()  {
@@ -283,10 +334,6 @@ public static class ExampleConfig
                 new List<string>(){"System.IO.DirectoryInfo", "CreateSubdirectory", "System.String", "System.Security.AccessControl.DirectorySecurity"},
                 new List<string>(){"System.IO.DirectoryInfo", "Create", "System.Security.AccessControl.DirectorySecurity"},
                 new List<string>(){"UnityEngine.MonoBehaviour", "runInEditMode"},
-
-                new List<string>(){"UnityEngine.Light", "shadowRadius"},
-                new List<string>(){ "UnityEngine.Light", "SetLightDirty"},
-                new List<string>(){ "UnityEngine.Light", "shadowAngle"},
             };
 
 #if UNITY_2018_1_OR_NEWER
@@ -319,4 +366,57 @@ public static class ExampleConfig
         return false;
     };
 #endif
+
+    // /// <summary>
+    // /// 在Xlua中使用DoTween
+    // /// </summary>
+    // public static class LuaCallCsharpCustom
+    // {
+    //     [LuaCallCSharp]
+    //     [ReflectionUse]
+    //     public static List<Type> luaCallCsharpList = new List<Type>(){
+    //         //DOTween
+    //         typeof(DG.Tweening.AutoPlay),
+    //         typeof(DG.Tweening.AxisConstraint),
+    //         typeof(DG.Tweening.Ease),
+    //         typeof(DG.Tweening.LogBehaviour),
+    //         typeof(DG.Tweening.LoopType),
+    //         typeof(DG.Tweening.PathMode),
+    //         typeof(DG.Tweening.PathType),
+    //         typeof(DG.Tweening.RotateMode),
+    //         typeof(DG.Tweening.ScrambleMode),
+    //         typeof(DG.Tweening.TweenType),
+    //         typeof(DG.Tweening.UpdateType),
+    //
+    //         typeof(DG.Tweening.DOTween),
+    //         typeof(DG.Tweening.DOVirtual),
+    //         typeof(DG.Tweening.EaseFactory),
+    //         typeof(DG.Tweening.Tweener),
+    //         typeof(DG.Tweening.Tween),
+    //         typeof(DG.Tweening.Sequence),
+    //         typeof(DG.Tweening.TweenParams),
+    //         typeof(DG.Tweening.Core.ABSSequentiable),
+    //
+    //         typeof(DG.Tweening.Core.TweenerCore<Vector3, Vector3, DG.Tweening.Plugins.Options.VectorOptions>),
+    //
+    //         typeof(DG.Tweening.TweenCallback),
+    //         typeof(DG.Tweening.TweenExtensions),
+    //         typeof(DG.Tweening.TweenSettingsExtensions),
+    //         typeof(DG.Tweening.ShortcutExtensions),
+    //         typeof(DG.Tweening.DOTweenModuleAudio),
+    //         typeof(DG.Tweening.DOTweenModulePhysics),
+    //         typeof(DG.Tweening.DOTweenModulePhysics2D),
+    //         typeof(DG.Tweening.DOTweenModuleSprite),
+    //         typeof(DG.Tweening.DOTweenModuleUI),
+    //         typeof(DG.Tweening.DOTweenModuleUnityVersion),
+    //         typeof(DG.Tweening.DOTweenModuleUtils),
+    //
+    //         typeof(DoTweenManager),
+    //
+    //         //dotween pro 的功能
+    //         //typeof(DG.Tweening.DOTweenPath),
+    //         //typeof(DG.Tweening.DOTweenVisualManager),
+    //
+    //     };
+    //}
 }

@@ -1671,6 +1671,7 @@ namespace CSObjectWrapEditor
             Debug.Log("finished! use " + (DateTime.Now - start).TotalMilliseconds + " ms");
             AssetDatabase.Refresh();
         }
+        
 
 #if UNITY_EDITOR_OSX || UNITY_EDITOR_WIN
         public static void GenUsingCLI()
