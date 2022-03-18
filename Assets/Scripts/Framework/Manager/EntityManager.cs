@@ -27,7 +27,7 @@ public class EntityManager : MonoBehaviour
     {
         for (int i = 0; i < group.Count; i++)
         {
-            GameObject go = new GameObject("Group - " + group[i]);
+            GameObject go = new GameObject("Group-" + group[i]);
             go.transform.SetParent(EntityParent, false);
             groups.Add(group[i], go.transform);
         }

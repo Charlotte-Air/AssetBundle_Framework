@@ -6,18 +6,14 @@ namespace AssetBundleTool
 {
     public class AssetBundle
     {
-
-        private HashSet<string> mChildAB = new HashSet<string>();
-
-        //一个bundle对应多个物件(一般1个prefab1个包，这里只是做下支持，便于扩展)
-        private Dictionary<string, AssetInfo> mAssets = new Dictionary<string, AssetInfo>();
-
         public string ModName { get; private set; }
         public string BundleName { get; private set; }
         public UnityEngine.AssetBundle Bundle { get; private set; }
-        
         public delegate void LoadResCallBack(string assetName, bool isLoadOK, Object asset);
-        private Dictionary<string, Queue<ABCallBackHandler>> mLoadCallbackList = new Dictionary<string, Queue<ABCallBackHandler>>();
+        
+        HashSet<string> mChildAB = new HashSet<string>();
+        Dictionary<string, Queue<ABCallBackHandler>> mLoadCallbackList = new Dictionary<string, Queue<ABCallBackHandler>>();
+        Dictionary<string, AssetInfo> mAssets = new Dictionary<string, AssetInfo>(); //一个bundle对应多个物件(一般1个prefab1个包，这里只是做下支持，便于扩展)
 
         public class ABCallBackHandler
         {

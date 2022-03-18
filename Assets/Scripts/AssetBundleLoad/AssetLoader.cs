@@ -9,7 +9,6 @@ namespace AssetBundleTool
 {
     public class AssetLoader
     {
-
         public string ModName { get; private set; }
         public string BundleName { get; private set; }
         public string BundlePath { get; private set; }

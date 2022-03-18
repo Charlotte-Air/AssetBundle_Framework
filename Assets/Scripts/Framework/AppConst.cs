@@ -8,6 +8,7 @@
     }
     
     public static bool OpenLog = true;
+    public static bool IsUsePatch = false; //优先读取patch目录
     public const string BundleExtension = ".ab";
     public const string FileListName = "filelist.txt";
     public static GameMode gameMode = GameMode.UpdateMode;

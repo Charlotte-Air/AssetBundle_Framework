@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
+using AssetBundleTool;
 using System.Collections.Generic;
+using Charlotte;
 
 public class GameManager
 {
@@ -10,12 +13,14 @@ public class GameManager
         public const string UI = "UIManager";
         public const string Lua = "LuaManager";
         public const string Net = "NetManager";
+        public const string Asset = "AssetManager";
         public const string Scene = "SceneManager";
         public const string Sound = "SoundManager";
         public const string Entity = "EntityManager";
         public const string Message = "MessageManager";
         public const string Pool = "ObjectPoolManager";
         public const string Resourece = "ResoureceManager";
+        public const string AssetRequest = "AssetRequestManager";
     }
     
     static GameManager instance;
@@ -42,6 +47,26 @@ public class GameManager
     
     public void Init()
     {
+        AddManager<AssetManager>(ManagerName.Asset);
+        AddManager<AssetRequestManager>(ManagerName.AssetRequest);
+        var re = GetManager<AssetRequestManager>(ManagerName.AssetRequest);
+        AssetManager.Instance.InitRoot(re.AssetsBuildPath, null);
+        AssetManager.Instance.InitMod(PathUtil.MOD_NAME);
+        re.StartCoroutine(InitManager());
+        re.MainAsyncLoad(@"Assets/AssetBundle/UI/Character.prefab",(AssetRequestBase req) =>
+        {
+            GameObject prefab = null;
+            if (req.asset != null)
+            {
+                var obj = req.asset as GameObject;
+                prefab = UnityEngine.Object.Instantiate(obj);
+            }
+            return;
+        });
+    }
+
+    IEnumerator InitManager()
+    {
         AddManager<UIManager>(ManagerName.UI);
         AddManager<LuaManager>(ManagerName.Lua);
         AddManager<NetManager>(ManagerName.Net);
@@ -50,7 +75,7 @@ public class GameManager
         AddManager<EntityManager>(ManagerName.Entity);
         AddManager<MessageManager>(ManagerName.Message);
         AddManager<ObjectPoolManager>(ManagerName.Pool);
-        AddManager<ResoureceManager>(ManagerName.Resourece);
+        yield break;
     }
 
     /// <summary>
